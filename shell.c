@@ -29,17 +29,9 @@ int main(){
 		
 		//If command is built-in invoke appropriate function (1-5, 7)
 		
-		//(Nat): this bit is just a placeholder to make sure the external_command goes through; replace this specific execute_external_command with "built-in invoke appropriate function" later
-		if (1) {
-			execute_external_command(args);
-		}
-		
 		//Else execute command as an external process (2)
-		else {
-        		execute_external_command(args);
-   		 }
 
-		free(args);
+		free(args);		
 	}
 	// End while (okay yes this comment is pointless)
 	
