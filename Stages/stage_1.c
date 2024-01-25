@@ -20,7 +20,7 @@ char** ParseInput() {
     buffer[strcspn(buffer, "\n")] = '\0';
 	
 	// return the input split by its tokens
-	char** result = (char**)malloc(sizeof(char**) * MAX_ARGS_QUANTITY);
+	char** result = (char**)calloc(MAX_ARGS_QUANTITY, sizeof(char**));
 	char* currArg = strtok(buffer, TOKENS);
 	for (int i = 0; i < MAX_ARGS_QUANTITY && currArg != NULL; i++, currArg = strtok(NULL, TOKENS)) {
 		*(result + i) = currArg;
