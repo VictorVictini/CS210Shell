@@ -20,8 +20,6 @@ void execute_external_command(char **args) {
     } else if (pid < 0) {
         perror("shell");
     } else { // Parent process
-        do {
-            wpid = waitpid(pid, &status, WUNTRACED);
-        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+        wait(NULL);
     }
 }
