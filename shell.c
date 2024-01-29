@@ -18,6 +18,7 @@ int main(){
 
 		//Read and parse user input (1)
 		char** args = ParseInput();
+		if (args == NULL) break;
 
 		// for testing purposes
 		for (int i = 0; *(args + i) != NULL; i++) {
