@@ -2,10 +2,17 @@
 
 int main(){
 	//Find the user home directory from the environment (3)
-	
+	char* home_dir = GetHomeDirectory();
+
 	//Save the current path (3)
+	char* saved_path = GetWorkingDirectory();
 
 	//Set current working directory to user home directory (3)
+	if (ChangeWorkingDirectory(home_dir) == -1)
+	{
+		printf("%s\n", "Failed to change working directory");
+		exit(1);
+	}
 	
 	//Load history (6)
 	
@@ -41,6 +48,7 @@ int main(){
 	//Save aliases (8)
 	
 	//Restore original path (3)
+	ChangeWorkingDirectory(saved_path);
 	
 	//Exit
 	return 0;
