@@ -8,15 +8,11 @@
 #include <sys/wait.h>
 
 void execute_external_command(char **args) {
-    pid_t pid, wpid;
-    int status;
-
-    pid = fork();
+    pid_t pid = fork();
     if (pid == 0) { // Child process
-        if (execvp(args[0], args) == -1) {
-            perror("shell");
-        }
-        exit(EXIT_FAILURE);
+        execvp(args[0], args);
+	perror("shell");
+	exit(EXIT_FAILURE);
     } else if (pid < 0) {
         perror("shell");
     } else { // Parent process
