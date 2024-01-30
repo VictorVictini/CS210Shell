@@ -25,5 +25,9 @@ char** ParseInput() {
 	for (int i = 0; i < MAX_ARGS_QUANTITY && currArg != NULL; i++, currArg = strtok(NULL, TOKENS)) {
 		*(result + i) = currArg;
 	}
+
+	// Free the buffer!
+ 	free(buffer);
+
 	return result;
 }
