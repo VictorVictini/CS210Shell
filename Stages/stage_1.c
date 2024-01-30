@@ -8,7 +8,7 @@ void display_prompt(){
 char** ParseInput() {
 	// retrieving input
 	char* buffer = (char*)malloc(sizeof(char*) * MAX_BUFFER_LENGTH);
-    fgets(buffer, MAX_BUFFER_LENGTH, stdin);
+    if (fgets(buffer, MAX_BUFFER_LENGTH, stdin) == NULL) return NULL;
 
 	// if the string doesn't contain \n or NULL
     if (strchr(buffer, '\n') == NULL) {
