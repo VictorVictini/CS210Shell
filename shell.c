@@ -31,8 +31,8 @@ int main(){
 		//If command is built-in invoke appropriate function (1-5, 7)
 		
 		//Else execute command as an external process (2)
-
-		free(args);		
+		free(*args); //frees the buffer (stage_1.c)
+		free(args); //frees the result (stage_1.c)
 	}
 	// End while (okay yes this comment is pointless)
 	
