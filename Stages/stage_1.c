@@ -15,7 +15,6 @@ char** ParseInput() {
 		char chr = fgetc(stdin);
         while (chr != '\n' && chr != EOF)
 		{
-			chr = '\0';
 			chr = fgetc(stdin);
 		};
 	}
