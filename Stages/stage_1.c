@@ -13,7 +13,11 @@ char** ParseInput() {
 	// if the string doesn't contain \n or NULL
     if (strchr(buffer, '\n') == NULL) {
 		char chr = fgetc(stdin);
-        while (chr != '\n' && chr != EOF);
+        while (chr != '\n' && chr != EOF)
+		{
+			chr = '\0';
+			chr = fgetc(stdin);
+		};
 	}
 
 	// replace last character with \0, (find how many characters there are before the \n)
