@@ -38,9 +38,9 @@ int main(){
 		//Else execute command as an external process (2)
 		else {
         		execute_external_command(args);
-   		 }
-
-		free(args);
+   	}
+		free(*args); //frees the buffer (stage_1.c)
+		free(args); //frees the result (stage_1.c)
 	}
 	// End while (okay yes this comment is pointless)
 	

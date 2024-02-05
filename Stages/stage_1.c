@@ -30,8 +30,5 @@ char** ParseInput() {
 		*(result + i) = currArg;
 	}
 
-	// Free the buffer!
- 	free(buffer);
-
 	return result;
 }
