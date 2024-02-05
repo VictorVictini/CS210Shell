@@ -18,7 +18,12 @@ int main(){
 
 		//Read and parse user input (1)
 		char** args = ParseInput();
-		if (args == NULL) break;
+		if (args == NULL)
+		{
+			printf("\n");
+			break;
+		}
+		if (args[0] != NULL && strcmp("exit", args[0]) == 0) break;
 
 		// for testing purposes
 		for (int i = 0; *(args + i) != NULL; i++) {
