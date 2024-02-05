@@ -20,9 +20,10 @@ int main(){
 		char** args = ParseInput();
 		if (args == NULL)
 		{
-			printf("%s", "\n");
+			printf("\n");
 			break;
 		}
+		if (args[0] != NULL && strcmp("exit", args[0]) == 0) break;
 
 		// for testing purposes
 		for (int i = 0; *(args + i) != NULL; i++) {
@@ -33,7 +34,6 @@ int main(){
 		//respectively (5 & 7)
 		
 		//If command is built-in invoke appropriate function (1-5, 7)
-		if (args[0] != NULL && strcmp("exit", args[0]) == 0) break;
 		
 		//Else execute command as an external process (2)
 
