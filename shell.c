@@ -18,7 +18,12 @@ int main(){
 
 		//Read and parse user input (1)
 		char** args = ParseInput();
-		if (args == NULL) break;
+		if (args == NULL)
+		{
+			printf("\n");
+			break;
+		}
+		if (args[0] != NULL && strcmp("exit", args[0]) == 0) break;
 
 		// for testing purposes
 		for (int i = 0; *(args + i) != NULL; i++) {
@@ -30,9 +35,17 @@ int main(){
 		
 		//If command is built-in invoke appropriate function (1-5, 7)
 		
+		//(Nat): this bit is just a placeholder to make sure the external_command goes through; replace this specific execute_external_command with "built-in invoke appropriate function" later
+		if (1) {
+			execute_external_command(args);
+		}
+		
 		//Else execute command as an external process (2)
-
-		free(args);		
+		else {
+        		execute_external_command(args);
+   	}
+		free(*args); //frees the buffer (stage_1.c)
+		free(args); //frees the result (stage_1.c)
 	}
 	// End while (okay yes this comment is pointless)
 	
