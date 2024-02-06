@@ -2,11 +2,14 @@
 
 int main(){
 	//Find the user home directory from the environment (3)
-	
 	//Save the current path (3)
+	save_original_path();
+		printf("%s\n", getenv("PWD"));
 
 	//Set current working directory to user home directory (3)
-	
+	set_current_directory_to_home();
+		printf("%s\n", getenv("PWD"));
+
 	//Load history (6)
 	
 	//Load aliases (8)
@@ -15,7 +18,6 @@ int main(){
 	while(1){
 		//Display prompt (1)
 		display_prompt();
-
 		//Read and parse user input (1)
 		char** args = ParseInput();
 		if (args == NULL) break;
@@ -42,7 +44,9 @@ int main(){
 	//Save aliases (8)
 	
 	//Restore original path (3)
-	
+	restore_original_path();
+		printf("%s\n", getenv("PWD"));
+
 	//Exit
 	return 0;
 }
