@@ -14,5 +14,21 @@ int ChangeWorkingDirectory(const char* path)
 
 char* GetHomeDirectory()
 {
-	return getenv("HOME");
+	char* home = (char*)calloc(MAX_PATH_LENGTH, sizeof(char*));
+	strcpy(home, getenv("HOME"));
+
+	return home;
+}
+
+int ChangePathEnv(const char* path)
+{
+	return setenv("PATH", path, 1);
+}
+
+char* GetPathEnv()
+{
+	char* path = (char*)calloc(MAX_PATH_LENGTH, sizeof(char*));
+	strcpy(path, getenv("PATH"));
+
+	return path;
 }
