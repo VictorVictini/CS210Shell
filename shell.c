@@ -63,19 +63,21 @@ int main(){
 				printf("New path changed to %s\n", newPath);
 			}
 		}
-		//(Nat): this bit is just a placeholder to make sure the external_command goes through; replace this specific execute_external_command with "built-in invoke appropriate function" later
-		else 
-		{
-        		execute_external_command(args);
-   		}
 		//(Lex): for the cd part.
-		if(strcmp("cd", args[0]) == 0)
+		else if(args[0] != NULL && strcmp("cd", args[0]) == 0 && *(args + 2) == NULL)
 		{
 			if(*(args + 1) == NULL)
 				ChangeDirectory(GetPathEnv());
 			else
 				ChangeDirectory(*(args + 1));
 		}
+		//(Nat): this bit is just a placeholder to make sure the external_command goes through; replace this specific execute_external_command with "built-in invoke appropriate function" later
+		else 
+		{
+        		execute_external_command(args);
+   		}
+		
+		
 		
 
 		//Else execute command as an external process (2)
@@ -96,4 +98,4 @@ int main(){
 	
 	//Exit
 	return 0;
-}
+} 	
