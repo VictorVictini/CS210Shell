@@ -66,12 +66,8 @@ int main(){
 		//(Lex): for the cd part.
 		if(strcmp("cd", args[0]) == 0)
 		{
-			printf("successfully entered the shid\n");	
 			if(*(args + 1) == NULL)
-			{
-				printf(GetPathEnv());
 				ChangeDirectory(GetPathEnv());
-			}
 			else
 				ChangeDirectory(*(args + 1));
 		}
