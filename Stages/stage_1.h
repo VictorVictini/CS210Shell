@@ -4,7 +4,7 @@
 #include <string.h>
 
 // constants
-#define MAX_BUFFER_LENGTH 512
+#define MAX_BUFFER_LENGTH 513
 #define MAX_ARGS_QUANTITY 20
 #define TOKENS " \t|><&;"
 

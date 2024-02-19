@@ -34,11 +34,16 @@ int main()
 		}
 		if (args[0] != NULL && strcmp("exit", args[0]) == 0) break;
 
+		// for testing purposes
+		for (int i = 0; *(args + i) != NULL; i++) {
+			printf("%s\n", *(args + i));
+		}
+		if (args[0] != NULL && strcmp("exit", args[0]) == 0) break;
+
 		//While the command is a history invocation or alias then replace it 
 		//with the appropriate command from history or the aliased command 
 		//respectively (5 & 7)
 		
-		//If command is built-in invoke appropriate function (1-5, 7)
 		if (args[0] != NULL && strcmp("getpath", args[0]) == 0)
 		{
 			if (args[1] != NULL) printf("getpath should have no arguments.\n");
@@ -65,7 +70,6 @@ int main()
 		{
         	execute_external_command(args);
 		}
-		
 		free(*args); //frees the buffer (stage_1.c)
 		free(args); //frees the result (stage_1.c)
 	}
