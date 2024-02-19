@@ -41,13 +41,18 @@ int main()
 		//If command is built-in invoke appropriate function (1-5, 7)
 		if (args[0] != NULL && strcmp("getpath", args[0]) == 0)
 		{
-			char* path = GetPathEnv();
-			printf("%s\n", path);
-			free(path);
+			if (args[1] != NULL) printf("getpath should have no arguments.\n");
+			else
+			{
+				char* path = GetPathEnv();
+				printf("%s\n", path);
+				free(path);
+			}
 		}
 		else if (args[0] != NULL && strcmp("setpath", args[0]) == 0)
 		{
 			if (args[1] == NULL) printf("No argument provided for setpath.\n");
+			else if (args[2] != NULL) printf("Too many arguments provided for setpath.\n");
 			else
 			{
 				char* newPath = args[1];
@@ -71,6 +76,7 @@ int main()
 	
 	//Restore original path (3)
 	ChangePathEnv(saved_path);
+	printf("Path restored: %s\n", GetPathEnv());
 	
 	//Exit
 	return 0;
