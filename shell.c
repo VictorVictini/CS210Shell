@@ -41,7 +41,6 @@ int main(){
 		//with the appropriate command from history or the aliased command 
 		//respectively (5 & 7)
 		
-		//If command is built-in invoke appropriate function (1-5, 7)
 		if (args[0] != NULL && strcmp("getpath", args[0]) == 0)
 		{
 			if (args[1] != NULL) printf("getpath should have no arguments.\n");
@@ -76,12 +75,6 @@ int main(){
 		{
         		execute_external_command(args);
    		}
-		
-		
-		
-
-		//Else execute command as an external process (2)
-		
 		free(*args); //frees the buffer (stage_1.c)
 		free(args); //frees the result (stage_1.c)
 	}
@@ -98,4 +91,4 @@ int main(){
 	
 	//Exit
 	return 0;
-} 	
+} 
