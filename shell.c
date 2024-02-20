@@ -1,8 +1,8 @@
 #include "shell.h"
 
-int main()
-{
+int main(){
 	//Find the user home directory from the environment (3)
+	
 	char* home_dir = GetHomeDirectory();
 
 	//Save the current path (3)
@@ -20,8 +20,7 @@ int main()
 	//Load aliases (8)
 	
 	//Do while shell has not terminated
-	while(1)
-	{
+	while(1){
 		//Display prompt (1)
 		display_prompt();
 
@@ -38,8 +37,6 @@ int main()
 		for (int i = 0; *(args + i) != NULL; i++) {
 			printf("%s\n", *(args + i));
 		}
-		if (args[0] != NULL && strcmp("exit", args[0]) == 0) break;
-
 		//While the command is a history invocation or alias then replace it 
 		//with the appropriate command from history or the aliased command 
 		//respectively (5 & 7)
@@ -65,15 +62,25 @@ int main()
 				printf("New path changed to %s\n", newPath);
 			}
 		}
-		//Else execute command as an external process (2)
-		else
+		//(Lex): for the cd part.
+		else if(args[0] != NULL && strcmp("cd", args[0]) == 0 && *(args + 2) == NULL)
 		{
-        	execute_external_command(args);
+			if(*(args + 1) == NULL)
+				ChangeDirectory(GetPathEnv());
+			else
+				ChangeDirectory(*(args + 1));
 		}
+		//(Nat): this bit is just a placeholder to make sure the external_command goes through; replace this specific execute_external_command with "built-in invoke appropriate function" later
+		else 
+		{
+        		execute_external_command(args);
+   		}
 		free(*args); //frees the buffer (stage_1.c)
 		free(args); //frees the result (stage_1.c)
 	}
+	// End while (okay yes this comment is pointless)
 	
+	//From here down *could* be a separate exit function, depends on your logic
 	//Save history (6)
 	
 	//Save aliases (8)
@@ -84,4 +91,4 @@ int main()
 	
 	//Exit
 	return 0;
-}
+} 
