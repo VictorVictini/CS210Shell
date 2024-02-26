@@ -7,6 +7,7 @@
 #include "Stages/stage_7.h"
 #include "Stages/stage_8.h"
 #include "Stages/stage_9.h"
+#include "Stages/file_handling.h"
 #include "Commands/alias.h"
 #include "Commands/history.h"
 #include "Commands/path.h"
