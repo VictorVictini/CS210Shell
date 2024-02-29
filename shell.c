@@ -66,7 +66,7 @@ int main(){
 		else if(args[0] != NULL && strcmp("cd", args[0]) == 0)
 		{
 			if(*(args + 1) == NULL)
-				ChangeDirectory(GetPathEnv());
+				ChangeDirectory(home_dir);
 			else if(*(args+2) == NULL)
 				ChangeDirectory(*(args + 1));
 			else
