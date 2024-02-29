@@ -63,14 +63,12 @@ int main(){
 			}
 		}
 		//(Lex): for the cd part.
-		else if(args[0] != NULL && strcmp("cd", args[0]) == 0)
+		else if(args[0] != NULL && strcmp("cd", args[0]) == 0 && *(args + 2) == NULL)
 		{
 			if(*(args + 1) == NULL)
 				ChangeDirectory(GetPathEnv());
-			else if(*(args+2) == NULL)
-				ChangeDirectory(*(args + 1));
 			else
-				printf("Too many arguments provided for cd\n");
+				ChangeDirectory(*(args + 1));
 		}
 		//(Nat): this bit is just a placeholder to make sure the external_command goes through; replace this specific execute_external_command with "built-in invoke appropriate function" later
 		else 
