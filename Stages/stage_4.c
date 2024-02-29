@@ -2,6 +2,5 @@
 
 void ChangeDirectory(char* input)
 {
-    if(chdir(input) != 0)
-        perror(input);
+    chdir(input);
 }
