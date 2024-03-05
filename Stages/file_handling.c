@@ -13,11 +13,16 @@ int set_file(const char* file_location, char** data, const int len) {
 int get_file(const char* file_location, char** result, int max_lines) {
     FILE* fptr = fopen(file_location, "r");
     if (fptr == NULL) return -1;
-    char* currLine;
+    char* currLine = (char*)malloc(MAX_LINE_LENGTH);
+    if (currLine == NULL) {
+        fclose(fptr);
+        return -1;
+    }
     for (int i = 0; i < max_lines && fgets(currLine, MAX_LINE_LENGTH, fptr) != NULL; i++) {
         currLine[strcspn(currLine, "\n")] = '\0';
         strcpy(*(result + i), currLine);
     }
     fclose(fptr);
+    free(currLine);
     return 0;
 }
