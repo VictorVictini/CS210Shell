@@ -2,20 +2,6 @@
 
 int main()
 {
-	// testing alias
-	struct AliasPair aliasPairs[10];
-	int aliasLen = 0;
-	print_alias(aliasPairs, aliasLen);
-	//aliasLen = add_alias("1", "ls", aliasPairs, aliasLen);
-	if (aliasLen != -1) print_alias(aliasPairs, aliasLen);
-	printf("FART %d\n", aliasLen);
-	//aliasLen = add_alias("2", "pwd", aliasPairs, aliasLen);
-	if (aliasLen != -1) print_alias(aliasPairs, aliasLen);
-	printf("FART %d\n", aliasLen);
-	//aliasLen = remove_alias("3", aliasPairs, aliasLen);
-	if (aliasLen != -1) print_alias(aliasPairs, aliasLen);
-	printf("FART %d\n", aliasLen);
-
 	//Find the user home directory from the environment (3)
 	
 	char* home_dir = GetHomeDirectory();
@@ -33,8 +19,12 @@ int main()
 	//Load history (6)
 	
 	//Load aliases (8)
+	struct AliasPair aliasPairs[10];
+	int aliasLen = 0;
 	
 	//Do while shell has not terminated
+	while(1)
+	{
 	while(1)
 	{
 		//Display prompt (1)
@@ -44,14 +34,20 @@ int main()
 		// reads input
 		char* input = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
 		if (retrieve_input(input, MAX_BUFFER_LENGTH) == -1) break;
+		char* input = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
+		if (retrieve_input(input, MAX_BUFFER_LENGTH) == -1) break;
 
 		// creates a copy for manipulation elsewhere
+		char* inputClone = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
 		char* inputClone = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
 		strcpy(inputClone, input);
 
 		// parses input using copy
 		char** args = (char**)calloc(MAX_ARGS_QUANTITY, sizeof(char*));
+		char** args = (char**)calloc(MAX_ARGS_QUANTITY, sizeof(char*));
 		int argsLen = parse_input(inputClone, args, MAX_ARGS_QUANTITY);
+		
+		if (argsLen > 0)
 		
 		if (argsLen > 0)
 		{
