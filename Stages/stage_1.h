@@ -18,10 +18,19 @@
 void display_prompt();
 
 /*
-	Gets user input from stdin and parses it by the relevant tokens
-	inputs: n/a
-	outputs: array of strings of the input separated by the tokens
-	side effects: n/a
+	Retrieves input from stdin
+	inputs: the string to be edited, its max length
+	outputs: n/a
+	side effects: any functionality reliant on the string may change
+	written by Mohamed, Danyal
+*/
+void retrieve_input(char* str, int maxLen);
+
+/*
+	Parses provided input into tokens
+	inputs: string to be split by the tokens, the args as an array of strings/equivalent, the maximum number of args
+	outputs: the length of the arguments
+	side effects: any functionality reliant on the args may change
 	written by Fady, Danyal
 */
-char** ParseInput();
+int parse_input(char* str, char** args, int maxArgs);

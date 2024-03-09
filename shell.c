@@ -25,7 +25,18 @@ int main(){
 		display_prompt();
 
 		//Read and parse user input (1)
-		char** args = ParseInput();
+		// reads input
+		char* input = (char*)calloc(sizeof(char), MAX_BUFFER_LENGTH);
+		retrieve_input(input, MAX_BUFFER_LENGTH);
+
+		// creates a copy for manipulation elsewhere
+		char* inputClone = (char*)calloc(sizeof(char), MAX_BUFFER_LENGTH);
+		strcpy(inputClone, input);
+
+		// parses input using copy
+		char** args = (char**)calloc(sizeof(char*), MAX_ARGS_QUANTITY);
+		int argsLen = parse_input(inputClone, args, MAX_ARGS_QUANTITY);
+
 		if (args == NULL)
 		{
 			printf("\n");
@@ -77,7 +88,8 @@ int main(){
 		{
         		execute_external_command(args);
    		}
-		free(*args); //frees the buffer (stage_1.c)
+		free(input); //frees the buffer (stage_1.c)
+		free(inputClone); //frees the buffer (stage_1.c)
 		free(args); //frees the result (stage_1.c)
 	}
 	// End while (okay yes this comment is pointless)

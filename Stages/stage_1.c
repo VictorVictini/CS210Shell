@@ -5,13 +5,12 @@ void display_prompt(){
 	printf("This is the greatest and best shell in the world >>>>> ");
 }
 
-char** ParseInput() {
+void retrieve_input(char* str, int maxLen) {
 	// retrieving input
-	char* buffer = (char*)malloc(sizeof(char*) * MAX_BUFFER_LENGTH);
-    if (fgets(buffer, MAX_BUFFER_LENGTH, stdin) == NULL) return NULL;
+    if (fgets(str, maxLen, stdin) == NULL) return;
 
 	// if the string doesn't contain \n or NULL
-    if (strchr(buffer, '\n') == NULL) {
+    if (strchr(str, '\n') == NULL) {
 		char chr = fgetc(stdin);
         while (chr != '\n' && chr != EOF)
 		{
@@ -20,14 +19,16 @@ char** ParseInput() {
 	}
 
 	// replace last character with \0, (find how many characters there are before the \n)
-    buffer[strcspn(buffer, "\n")] = '\0';
-	
-	// return the input split by its tokens
-	char** result = (char**)calloc(MAX_ARGS_QUANTITY, sizeof(char**));
-	char* currArg = strtok(buffer, TOKENS);
-	for (int i = 0; i < MAX_ARGS_QUANTITY && currArg != NULL; i++, currArg = strtok(NULL, TOKENS)) {
-		*(result + i) = currArg;
-	}
+    str[strcspn(str, "\n")] = '\0';
+}
 
-	return result;
+int parse_input(char* str, char** args, int maxArgs) {
+	char* currArg = strtok(str, TOKENS);
+	int len = 0;
+	while (len < maxArgs && currArg != NULL) {
+		*(args + len) = currArg;
+		len++;
+		currArg = strtok(NULL, TOKENS);
+	}
+	return len;
 }
