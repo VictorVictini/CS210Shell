@@ -24,7 +24,7 @@ void display_prompt();
 	side effects: any functionality reliant on the string may change
 	written by Mohamed, Danyal
 */
-void retrieve_input(char* str, int maxLen);
+int retrieve_input(char* str, int maxLen);
 
 /*
 	Parses provided input into tokens
