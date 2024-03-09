@@ -47,3 +47,12 @@ int remove_alias(char* alias, struct AliasPair* aliasPairs, int len);
     written by Danyal
 */
 void print_alias(struct AliasPair* aliasPairs, int len);
+
+/*
+	Parses a line of the input for the expected format (parse_input is not enough, hence custom parsing is necessary)
+	inputs: the string to parse, the args to edit
+	outputs: 0 if ran successfully, otherwise -1
+	side effects: changes functionality reliant on the string or args passed, will break if args isn't allocated to accept 3 of the expected arguments
+	written by Danyal
+*/
+int parse_alias_line(char* str, char** args);

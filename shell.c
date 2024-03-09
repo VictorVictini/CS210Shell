@@ -1,6 +1,21 @@
 #include "shell.h"
 
-int main(){
+int main()
+{
+	// testing alias
+	struct AliasPair aliasPairs[10];
+	int aliasLen = 0;
+	print_alias(aliasPairs, aliasLen);
+	//aliasLen = add_alias("1", "ls", aliasPairs, aliasLen);
+	if (aliasLen != -1) print_alias(aliasPairs, aliasLen);
+	printf("FART %d\n", aliasLen);
+	//aliasLen = add_alias("2", "pwd", aliasPairs, aliasLen);
+	if (aliasLen != -1) print_alias(aliasPairs, aliasLen);
+	printf("FART %d\n", aliasLen);
+	//aliasLen = remove_alias("3", aliasPairs, aliasLen);
+	if (aliasLen != -1) print_alias(aliasPairs, aliasLen);
+	printf("FART %d\n", aliasLen);
+
 	//Find the user home directory from the environment (3)
 	
 	char* home_dir = GetHomeDirectory();
@@ -20,74 +35,131 @@ int main(){
 	//Load aliases (8)
 	
 	//Do while shell has not terminated
-	while(1){
+	while(1)
+	{
 		//Display prompt (1)
 		display_prompt();
 
 		//Read and parse user input (1)
 		// reads input
-		char* input = (char*)calloc(sizeof(char), MAX_BUFFER_LENGTH);
-		retrieve_input(input, MAX_BUFFER_LENGTH);
+		char* input = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
+		if (retrieve_input(input, MAX_BUFFER_LENGTH) == -1) break;
 
 		// creates a copy for manipulation elsewhere
-		char* inputClone = (char*)calloc(sizeof(char), MAX_BUFFER_LENGTH);
+		char* inputClone = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
 		strcpy(inputClone, input);
 
 		// parses input using copy
-		char** args = (char**)calloc(sizeof(char*), MAX_ARGS_QUANTITY);
+		char** args = (char**)calloc(MAX_ARGS_QUANTITY, sizeof(char*));
 		int argsLen = parse_input(inputClone, args, MAX_ARGS_QUANTITY);
-
-		if (args == NULL)
-		{
-			printf("\n");
-			break;
-		}
-		if (args[0] != NULL && strcmp("exit", args[0]) == 0) break;
-
-		// for testing purposes
-		for (int i = 0; *(args + i) != NULL; i++) {
-			printf("%s\n", *(args + i));
-		}
-		//While the command is a history invocation or alias then replace it 
-		//with the appropriate command from history or the aliased command 
-		//respectively (5 & 7)
 		
-		if (args[0] != NULL && strcmp("getpath", args[0]) == 0)
+		if (argsLen > 0)
 		{
-			if (args[1] != NULL) printf("getpath should have no arguments.\n");
-			else
+			if (strcmp("exit", args[0]) == 0) break;
+			
+			//While the command is a history invocation or alias then replace it 
+			//with the appropriate command from history or the aliased command 
+			//respectively (5 & 7)
+
+			if (strcmp("getpath", args[0]) == 0)
 			{
-				char* path = GetPathEnv();
-				printf("%s\n", path);
-				free(path);
+				if (argsLen > 1)
+				{
+					printf("getpath should have no arguments.\n");
+				}
+				else
+				{
+					char* path = GetPathEnv();
+					printf("%s\n", path);
+					free(path);
+				}
+			}
+			else if (strcmp("setpath", args[0]) == 0)
+			{
+				if (argsLen < 2)
+				{
+					printf("No argument provided for setpath.\n");
+				}
+				else if (argsLen > 2) // <-- TODO support folders with spaces
+				{
+					printf("Too many arguments provided for setpath.\n");
+				}
+				else
+				{
+					char* newPath = args[1];
+					ChangePathEnv(newPath);
+					printf("New path changed to %s\n", newPath);
+				}
+			}
+			else if (strcmp("cd", args[0]) == 0)
+			{
+				if (argsLen == 1)
+				{
+					ChangeDirectory(home_dir);
+				}
+				else if(argsLen == 2) // <-- TODO support folders with spaces
+				{
+					ChangeDirectory(args[1]);
+				}
+				else
+				{
+					printf("Too many arguments provided for cd\n");
+				}
+			}
+			else if (strcmp("alias", args[0]) == 0)
+			{
+				if (argsLen == 1)
+				{
+					print_alias(aliasPairs, aliasLen);
+				}
+				else if (argsLen >= 3)
+				{
+					// creates a copy for manipulation elsewhere
+					char* inputCopy = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
+					strcpy(inputCopy, input);
+
+					// parses input using copy
+					char** aliasArgs = (char**)calloc(2, sizeof(char*));
+					if (parse_alias_line(inputCopy + 6, aliasArgs) == 0) { // inputCopy + 6 skips "alias "
+						int tempLen = add_alias(aliasArgs[0], aliasArgs[1], aliasPairs, aliasLen);
+						if (tempLen == -1) {
+							printf("Could not add alias \"%s\" to the list since there are too many aliases.\n", aliasArgs[0]);
+						} else {
+							aliasLen = tempLen;
+							printf("Successfully added alias \"%s\" with command \"%s\"\n", aliasArgs[0], aliasArgs[1]);
+						}
+					} else {
+						printf("Could not parse command. Please separate the alias and command with a space.\n");
+					}
+				}
+				else
+				{
+					printf("Alias cannot accept only one argument.\n");
+				}
+			}
+			else if (strcmp("unalias", args[0]) == 0)
+			{
+				if (argsLen == 2)
+				{
+					int tempLen = remove_alias(input + 8, aliasPairs, aliasLen);
+					if (tempLen != -1) { // input + 8 skips "unalias "
+						aliasLen = tempLen;
+						printf("Successfully removed alias \"%s\"\n", input + 8);
+					} else {
+						printf("Could not find provided alias \"%s\".\n", input + 8);
+					}
+				}
+				else
+				{
+					printf("Unalias can only accept exactly one argument.");
+				}
+			}
+			else 
+			{
+				execute_external_command(args);
 			}
 		}
-		else if (args[0] != NULL && strcmp("setpath", args[0]) == 0)
-		{
-			if (args[1] == NULL) printf("No argument provided for setpath.\n");
-			else if (args[2] != NULL) printf("Too many arguments provided for setpath.\n");
-			else
-			{
-				char* newPath = args[1];
-				ChangePathEnv(newPath);
-				printf("New path changed to %s\n", newPath);
-			}
-		}
-		//(Lex): for the cd part.
-		else if(args[0] != NULL && strcmp("cd", args[0]) == 0)
-		{
-			if(*(args + 1) == NULL)
-				ChangeDirectory(GetPathEnv());
-			else if(*(args+2) == NULL)
-				ChangeDirectory(*(args + 1));
-			else
-				printf("Too many arguments provided for cd\n");
-		}
-		//(Nat): this bit is just a placeholder to make sure the external_command goes through; replace this specific execute_external_command with "built-in invoke appropriate function" later
-		else 
-		{
-        		execute_external_command(args);
-   		}
+		
 		free(input); //frees the buffer (stage_1.c)
 		free(inputClone); //frees the buffer (stage_1.c)
 		free(args); //frees the result (stage_1.c)

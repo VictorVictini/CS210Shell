@@ -20,11 +20,11 @@ void display_prompt();
 /*
 	Retrieves input from stdin
 	inputs: the string to be edited, its max length
-	outputs: n/a
+	outputs: 0 if it went well, otherwise -1
 	side effects: any functionality reliant on the string may change
 	written by Mohamed, Danyal
 */
-void retrieve_input(char* str, int maxLen);
+int retrieve_input(char* str, int maxLen);
 
 /*
 	Parses provided input into tokens

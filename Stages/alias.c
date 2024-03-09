@@ -39,7 +39,24 @@ int index_of_alias(char* alias, struct AliasPair* aliasPairs, int len) {
 }
 
 void print_alias(struct AliasPair* aliasPairs, int len) {
+    if (len == 0) {
+        printf("There are currently no aliases created.\n");
+        return;
+    }
     for (int i = 0; i < len; i++) {
         printf("\"%s\" is an alias for \"%s\"\n", (aliasPairs + i)->alias, (aliasPairs + i)->command);
     }
+}
+
+// support all tokens later
+int parse_alias_line(char* str, char** args) {
+    for (int i = 0; *(str + i) != '\0' && *(str + i + 1) != '\0'; i++) {
+        if (*(str + i) == ' ') {
+            args[0] = str;
+            *(str + i) = '\0';
+            args[1] = str + i + 1;
+            return 0;
+        }
+    }
+    return -1;
 }
