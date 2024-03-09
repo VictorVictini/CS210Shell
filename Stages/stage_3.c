@@ -22,6 +22,8 @@ char* GetHomeDirectory()
 
 int ChangePathEnv(const char* path)
 {
+	if(chdir(path) != 0)
+		printf("Changed path to invalid path. change the current path to a valid one to fix it\n");
 	return setenv("PATH", path, 1);
 }
 
