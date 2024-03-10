@@ -53,17 +53,17 @@ int main()
 		if (argsLen > 0) {
 			int aliasIndex = index_of_alias(args[0], aliasPairs, aliasLen);
 			if (aliasIndex != -1) {
-				strcpy(inputClone, (aliasPairs + aliasIndex)->command);
 				if (argsLen > 1) {
 					// get the length of the first argument and add everything else from the input line
 					// consequently reconstructing the line to fit expectations
-					char curr = **args;
 					int len = 0;
-					while (curr != '\0') {
+					while (*(*args + len) != '\0') {
 						len++;
-						curr = *(*args + len);
 					}
+					strcpy(inputClone, (aliasPairs + aliasIndex)->command);
 					strcat(inputClone, input + len);
+				} else {
+					strcpy(inputClone, (aliasPairs + aliasIndex)->command);
 				}
 				args = (char**)calloc(MAX_ARGS_QUANTITY, sizeof(char*));
 				argsLen = parse_input(inputClone, args, MAX_ARGS_QUANTITY);
