@@ -25,8 +25,6 @@ int main()
 	//Do while shell has not terminated
 	while(1)
 	{
-	while(1)
-	{
 		//Display prompt (1)
 		display_prompt();
 
@@ -34,21 +32,15 @@ int main()
 		// reads input
 		char* input = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
 		if (retrieve_input(input, MAX_BUFFER_LENGTH) == -1) break;
-		char* input = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
-		if (retrieve_input(input, MAX_BUFFER_LENGTH) == -1) break;
 
 		// creates a copy for manipulation elsewhere
-		char* inputClone = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
 		char* inputClone = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
 		strcpy(inputClone, input);
 
 		// parses input using copy
 		char** args = (char**)calloc(MAX_ARGS_QUANTITY, sizeof(char*));
-		char** args = (char**)calloc(MAX_ARGS_QUANTITY, sizeof(char*));
 		int argsLen = parse_input(inputClone, args, MAX_ARGS_QUANTITY);
-		
-		if (argsLen > 0)
-		
+
 		if (argsLen > 0)
 		{
 			if (strcmp("exit", args[0]) == 0) break;
