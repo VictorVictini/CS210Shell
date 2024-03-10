@@ -8,7 +8,7 @@ int add_alias(char* alias, char* command, struct AliasPair* aliasPairs, int len)
 
     // if it was found, we replace its command
     if (aliasIndex != -1) {
-        printf("Overwriting alias \"%s\" with old command \"%s\"\n", alias, command);
+        printf("Overwriting alias \"%s\" with old command \"%s\"\n", alias, (aliasPairs + aliasIndex)->command);
         strcpy((aliasPairs + aliasIndex)->command, command);
         return len;
     }
