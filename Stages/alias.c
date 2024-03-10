@@ -25,9 +25,10 @@ int remove_alias(char* alias, struct AliasPair* aliasPairs, int len) {
 
     // swap the given index with the last 'filled' index then set the last 'filled' index's values to null
     // this process is combined for efficiency
-    *(aliasPairs + index) = *(aliasPairs + len - 1);
-    *(aliasPairs + len - 1)->command = '\0';
-    *(aliasPairs + len - 1)->alias = '\0';
+    strcpy((aliasPairs + index)->alias, (aliasPairs + len - 1)->alias);
+    strcpy((aliasPairs + index)->command, (aliasPairs + len - 1)->command);
+    *(aliasPairs + len)->command = '\0';
+    *(aliasPairs + len)->alias = '\0';
     return len - 1;
 }
 
