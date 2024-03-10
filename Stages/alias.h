@@ -2,9 +2,12 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "string.h"
+#include "file_handling.h"
+#include "stage_1.h" // to get the constant
 
 // constants
 #define MAX_ALIASES 10
+#define ALIASES_FILE_LOCATION "alias_data"
 
 // structs
 struct AliasPair {
@@ -56,3 +59,21 @@ void print_alias(struct AliasPair* aliasPairs, int len);
 	written by Danyal
 */
 int parse_alias_line(char* str, char** args);
+
+/*
+	Retrieves aliasPairs data from the file
+	inputs: the file location to read from, the aliasPair array to adapt
+	outputs: -1 if failed to read from file, -2 if failed to parse a line, -3 if failed to add to aliasPairs, otherwise the new length of the array is provided
+	side effects: anything reliant on aliasPairs will likely be changed, even if the parsing should fail, any extra lines will be 'cut off'/ignored, will overwrite data held in aliasPairs
+	written by Danyal
+*/
+int read_alias_file(const char* fileLocation, struct AliasPair* aliasPairs);
+
+/*
+	adds the aliasPairs data to the given file
+	inputs: the file location to write to, the aliasPairs array to add, the length of the array
+	output: -1 if something went wrong, else 0
+	side effects: n/a
+	written by Danyal
+*/
+int set_alias_file(const char* fileLocation, struct AliasPair* aliasPairs, int len);

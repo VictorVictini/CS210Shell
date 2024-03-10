@@ -8,13 +8,13 @@ int add_alias(char* alias, char* command, struct AliasPair* aliasPairs, int len)
 
     // if it was found, we replace its command
     if (aliasIndex != -1) {
-        (aliasPairs + aliasIndex)->command = command;
+        strcpy((aliasPairs + aliasIndex)->command, command);
         return len;
     }
 
     // adds a new aliasPair
-    struct AliasPair newPair = {alias, command};
-    *(aliasPairs + len) = newPair;
+    strcpy((aliasPairs + len)->alias, alias);
+    strcpy((aliasPairs + len)->command, command);
     return len + 1;
 }
 
@@ -26,8 +26,8 @@ int remove_alias(char* alias, struct AliasPair* aliasPairs, int len) {
     // swap the given index with the last 'filled' index then set the last 'filled' index's values to null
     // this process is combined for efficiency
     *(aliasPairs + index) = *(aliasPairs + len - 1);
-    (aliasPairs + len - 1)->command = NULL;
-    (aliasPairs + len - 1)->alias = NULL;
+    *(aliasPairs + len - 1)->command = '\0';
+    *(aliasPairs + len - 1)->alias = '\0';
     return len - 1;
 }
 
@@ -59,4 +59,49 @@ int parse_alias_line(char* str, char** args) {
         }
     }
     return -1;
+}
+
+int read_alias_file(const char* fileLocation, struct AliasPair* aliasPairs) {
+    // reading from file
+    char* fileData[MAX_ALIASES];
+    for (int i = 0; i < MAX_ALIASES; i++) {
+        *(fileData + i) = (char*)calloc(sizeof(char), MAX_BUFFER_LENGTH);
+    }
+    int aliasLen = get_file(fileLocation, fileData, MAX_ALIASES);
+    if (aliasLen == -1) return -1;
+
+    // parsing and assigning for the relevant aliases
+    char** args = (char**)calloc(sizeof(char*), 2);
+    for (int i = 0; i < aliasLen; i++) {
+        if (parse_alias_line(*(fileData + i), args) == -1) return -2;
+        if (add_alias(args[0], args[1], aliasPairs, i) == -1) return -3;
+    }
+    free(args);
+
+    // freeing stuff
+    for (int i = 0; i < MAX_ALIASES; i++) {
+        free(*(fileData + i));
+    }
+    return aliasLen;
+}
+
+int set_alias_file(const char* fileLocation, struct AliasPair* aliasPairs, int len) {
+    // setting fileData to be an array of string of the required format
+    char* fileData[len];
+    for (int i = 0; i < len; i++) {
+        *(fileData + i) = (char*)calloc(sizeof(char*), MAX_BUFFER_LENGTH);
+        strcpy(*(fileData + i), (aliasPairs + i)->alias);
+        strcat(*(fileData + i), " ");
+        strcat(*(fileData + i), (aliasPairs + i)->command);
+    }
+
+    // letting the other function handle the file handling
+    if (set_file(fileLocation, fileData, len) == -1) return -1;
+    
+    // freeing memory
+    for (int i = 0; i < len; i++) {
+        free(*(fileData + i));
+    }
+
+    return 0;
 }

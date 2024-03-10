@@ -19,8 +19,16 @@ int main()
 	//Load history (6)
 	
 	//Load aliases (8)
-	struct AliasPair aliasPairs[10];
-	int aliasLen = 0;
+	struct AliasPair aliasPairs[MAX_ALIASES];
+	for (int i = 0; i < MAX_ALIASES; i++) {
+		(aliasPairs + i)->alias = (char*)calloc(sizeof(char), MAX_BUFFER_LENGTH);
+		(aliasPairs + i)->command = (char*)calloc(sizeof(char), MAX_BUFFER_LENGTH);
+	}
+	int aliasLen = read_alias_file(ALIASES_FILE_LOCATION, aliasPairs);
+	if (aliasLen == -1) printf("Failed to open the file at %s\n", ALIASES_FILE_LOCATION);
+	if (aliasLen == -2) printf("Failed to parse a line in the file at %s\n", ALIASES_FILE_LOCATION);
+	if (aliasLen == -3) printf("Failed to add to the list of aliases. There are too many aliases. The limit is %d\n", MAX_ALIASES);
+	if (aliasLen < 0) aliasLen = 0;
 	
 	//Do while shell has not terminated
 	while(1)
@@ -139,7 +147,7 @@ int main()
 				}
 				else
 				{
-					printf("Unalias can only accept exactly one argument.");
+					printf("Unalias can only accept exactly one argument.\n");
 				}
 			}
 			else 
@@ -158,6 +166,7 @@ int main()
 	//Save history (6)
 	
 	//Save aliases (8)
+	if (set_alias_file(ALIASES_FILE_LOCATION, aliasPairs, aliasLen) == -1) printf("Failed to add aliases to the file %s\n", ALIASES_FILE_LOCATION);
 	
 	//Restore original path (3)
 	ChangePathEnv(saved_path);
@@ -165,4 +174,4 @@ int main()
 	
 	//Exit
 	return 0;
-} 
+}
