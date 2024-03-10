@@ -28,8 +28,8 @@ int remove_alias(char* alias, struct AliasPair* aliasPairs, int len) {
     // this process is combined for efficiency
     strcpy((aliasPairs + index)->alias, (aliasPairs + len - 1)->alias);
     strcpy((aliasPairs + index)->command, (aliasPairs + len - 1)->command);
-    *(aliasPairs + len)->command = '\0';
-    *(aliasPairs + len)->alias = '\0';
+    *(aliasPairs + len - 1)->command = '\0';
+    *(aliasPairs + len - 1)->alias = '\0';
     return len - 1;
 }
 
