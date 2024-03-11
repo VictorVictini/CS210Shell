@@ -20,7 +20,8 @@ int get_file(const char* file_location, char** result, int max_lines) {
     }
     int len = 0;
     while (len < max_lines && fgets(currLine, MAX_LINE_LENGTH, fptr) != NULL) {
-        currLine[strcspn(currLine, "\n")] = '\0';
+        int index = strcspn(currLine, "\n") - 1;
+        if (*(currLine + index + 1) == '\n') currLine[index] = '\0';
         strcpy(*(result + len), currLine);
         len++;
     }

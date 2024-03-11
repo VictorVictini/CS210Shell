@@ -52,15 +52,31 @@ void print_alias(struct AliasPair* aliasPairs, int len) {
 
 // support all tokens later
 int parse_alias_line(char* str, char** args) {
-    for (int i = 0; *(str + i) != '\0' && *(str + i + 1) != '\0'; i++) {
-        if (*(str + i) == ' ') {
-            args[0] = str;
-            *(str + i) = '\0';
-            args[1] = str + i + 1;
-            return 0;
-        }
+    // ensuring first argument is not a token
+    for (int i = 0; *(TOKENS + i) != '\0'; i++) {
+        if (*(TOKENS + i) == *str) return -1; 
     }
-    return -1;
+
+    // finding the first instance of a token
+    char* firstToken = NULL;
+    for (int i = 0; *(TOKENS + i) != '\0' && firstToken == NULL; i++) {
+        firstToken = strchr(str, *(TOKENS + i));
+    }
+    if (firstToken == NULL) return -1;
+
+    // finding the 2nd arg i.e. the first non-token char after the given token
+    char* secArg = firstToken + 1;
+    while (*secArg != '\0' && strchr(TOKENS, *secArg) != NULL) {
+        secArg++;
+    }
+    if (*secArg == '\0') return -1;
+
+    // assign memory locations to args
+    args[0] = str;
+    firstToken = '\0';
+    args[1] = secArg;
+
+    return 0;
 }
 
 int read_alias_file(const char* fileDirectory, const char* fileName, struct AliasPair* aliasPairs) {
