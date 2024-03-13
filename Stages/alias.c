@@ -73,7 +73,7 @@ int parse_alias_line(char* str, char** args) {
 
     // assign memory locations to args
     args[0] = str;
-    firstToken = '\0';
+    *firstToken = '\0';
     args[1] = secArg;
 
     return 0;
