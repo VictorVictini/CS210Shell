@@ -17,6 +17,10 @@ int main()
 	}
 	
 	//Load history (6)
+	if (load_history(home_dir) == -1)
+	{
+		printf("Could not find %s at %s when trying to load history.\n", HIST_FILE_NAME, home_dir);
+	}
 	
 	//Load aliases (8)
 	struct AliasPair aliasPairs[MAX_ALIASES];
@@ -49,8 +53,26 @@ int main()
 		char** args = (char**)calloc(MAX_ARGS_QUANTITY, sizeof(char*));
 		int argsLen = parse_input(inputClone, args, MAX_ARGS_QUANTITY);
 
-		// if we find the alias with the first argument, re-process the previous process
-		if (argsLen > 0) {
+		if (argsLen > 0)
+		{
+			//While the command is a history invocation or alias then replace it 
+			//with the appropriate command from history or the aliased command 
+			//respectively (5 & 7)
+
+			// Check for history invocations and handle them
+			char* history_invocation = invoke_from_history(args[0], argsLen);
+			if (history_invocation != NULL)
+			{
+				// If it's a history invocation, replace the command with the history command
+				argsLen = parse_input(history_invocation, args, MAX_ARGS_QUANTITY);
+			}
+			else
+			{
+				// Add the entered command to history
+				add_to_history(input);
+			}
+
+			// if we find the alias with the first argument, re-process the previous process
 			int aliasIndex = index_of_alias(args[0], aliasPairs, aliasLen);
 			if (aliasIndex != -1) {
 				if (argsLen > 1) {
@@ -65,19 +87,11 @@ int main()
 				} else {
 					strcpy(inputClone, (aliasPairs + aliasIndex)->command);
 				}
-				args = (char**)calloc(MAX_ARGS_QUANTITY, sizeof(char*));
+				
 				argsLen = parse_input(inputClone, args, MAX_ARGS_QUANTITY);
 			}
-		}
 
-		if (argsLen > 0)
-		{
 			if (strcmp("exit", args[0]) == 0) break;
-			
-			//While the command is a history invocation or alias then replace it 
-			//with the appropriate command from history or the aliased command 
-			//respectively (5 & 7)
-
 			if (strcmp("getpath", args[0]) == 0)
 			{
 				if (argsLen > 1)
@@ -121,6 +135,18 @@ int main()
 				else
 				{
 					printf("Too many arguments provided for cd\n");
+				}
+			}
+			else if (strcmp("history", args[0]) == 0)
+			{
+				if (argsLen == 1)
+				{
+					// Print the history
+					print_history();
+				}
+				else
+				{
+					printf("history should have no arguments.\n");
 				}
 			}
 			else if (strcmp("alias", args[0]) == 0)
@@ -183,8 +209,11 @@ int main()
 	}
 	// End while (okay yes this comment is pointless)
 	
-	//From here down *could* be a separate exit function, depends on your logic
 	//Save history (6)
+	if (save_history(home_dir) == -1)
+	{
+		printf("Could not write to %s at %s when trying to save history.\n", HIST_FILE_NAME, home_dir);
+	}
 	
 	//Save aliases (8)
 	if (set_alias_file(home_dir, ALIASES_FILE_NAME, aliasPairs, aliasLen) == -1) printf("Failed to add aliases to the file \"%s\" at \"%s\"\n", ALIASES_FILE_NAME, home_dir);
