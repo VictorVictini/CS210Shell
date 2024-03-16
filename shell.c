@@ -58,6 +58,8 @@ int main(){
 			else
 			{
 				char* newPath = args[1];
+				if(chdir(newPath) != 0)
+					printf("Changed path to invalid path. If shell doesn't work properly, change the current path to a valid one to fix it\n");
 				ChangePathEnv(newPath);
 				printf("New path changed to %s\n", newPath);
 			}
