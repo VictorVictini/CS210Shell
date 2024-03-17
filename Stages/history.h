@@ -19,7 +19,7 @@ typedef struct {
 // Function declarations
 void add_to_history(char* command);
 void print_history();
-char* invoke_from_history(char* command, int argsLen);
+char* invoke_from_history(char* input, char* command, int argsLen);
 
 /*
 	Saves the history
@@ -34,6 +34,6 @@ int save_history(char* directory);
 int load_history(char* directory);
 
 //clears history (Nathan)
-void clear_history(char* directory);
+int clear_history(char* directory);
 
 #endif // STAGE_5_H

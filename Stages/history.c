@@ -34,7 +34,7 @@ void print_history() {
 }
 
 // Function to invoke a command from history
-char* invoke_from_history(char* command, int argsLen) {
+char* invoke_from_history(char* input, char* command, int argsLen) {
     // Check if it is a valid history invocation
     if (strcmp(command, "!!") == 0) {
         if (argsLen != 1) {
@@ -82,7 +82,8 @@ char* invoke_from_history(char* command, int argsLen) {
             return NULL;
         }
     } else {
-        // Not a valid history invocation
+        // Add the entered command to history
+        add_to_history(input);
         return NULL;
     }
 }
@@ -140,7 +141,7 @@ int load_history(char* directory) {
     return res;
 }
 
-void clear_history(char* directory) {
+int clear_history(char* directory) {
     // reset history count
     history_count = 0;
 
@@ -153,12 +154,5 @@ void clear_history(char* directory) {
     // wipe history file
     char fileLoc[2048];
     sprintf(fileLoc, "%s/%s", directory, HIST_FILE_NAME);
-    FILE *fp = fopen(fileLoc, "w");
-    if (fp == NULL) {
-        printf("Error: Failed to open history file for writing.\n");
-        return;
-    }
-    fclose(fp);
-
-    printf("History cleared.\n");
+    return set_file(fileLoc, NULL, 0);
 }

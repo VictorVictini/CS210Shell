@@ -60,16 +60,11 @@ int main()
 			//respectively (5 & 7)
 
 			// Check for history invocations and handle them
-			char* history_invocation = invoke_from_history(args[0], argsLen);
+			char* history_invocation = invoke_from_history(input, args[0], argsLen);
 			if (history_invocation != NULL)
 			{
 				// If it's a history invocation, replace the command with the history command
 				argsLen = parse_input(history_invocation, args, MAX_ARGS_QUANTITY);
-			}
-			else
-			{
-				// Add the entered command to history
-				add_to_history(input);
 			}
 
 			// if we find the alias with the first argument, re-process the previous process
@@ -197,12 +192,24 @@ int main()
 					printf("Unalias can only accept exactly one argument.\n");
 				}
 			}
-
-			else if (strcmp("clear", args[0]) == 0 && strcmp("history", args[1]) == 0)
-            		{
-                		clear_history(home_dir);
-            		}
-
+			else if (argsLen > 1 && strcmp("clear", args[0]) == 0 && strcmp("history", args[1]) == 0)
+			{
+				if (argsLen == 2)
+				{
+					if (clear_history(home_dir) == -1)
+					{
+						printf("Error: Failed to open history file for writing.\n");
+					}
+					else
+					{
+						printf("History cleared.\n");
+					}
+				}
+				else
+				{
+					printf("clear history does not accept arguments.\n");
+				}
+			}
 			else 
 			{
 				execute_external_command(args);
