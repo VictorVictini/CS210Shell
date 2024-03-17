@@ -36,7 +36,7 @@ int main()
 	// getting some memory for reading inputs and args
 	char* input = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
 	char* inputClone = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
-	char** args = (char**)calloc(MAX_ARGS_QUANTITY, sizeof(char*));
+	char** args = (char**)malloc(MAX_ARGS_QUANTITY * sizeof(char*));
 	
 	//Do while shell has not terminated
 	while(1)
@@ -52,6 +52,7 @@ int main()
 		strcpy(inputClone, input);
 
 		// parses input using copy
+		memset(args, 0, MAX_ARGS_QUANTITY * sizeof(char*));
 		int argsLen = parse_input(inputClone, args, MAX_ARGS_QUANTITY);
 
 		if (argsLen > 0)
@@ -61,13 +62,14 @@ int main()
 			//respectively (5 & 7)
 
 			// Check for history invocations and handle them
-			char* history_invocation = invoke_from_history(input, args[0], argsLen);
-			if (history_invocation != NULL)
+			char* history_invocation = NULL;
+			int historyResult = invoke_from_history(input, args[0], argsLen, &history_invocation); // 0 = success, -1 = fail, 1 = not an invocation
+			if (historyResult == 0)
 			{
-				if (history_invocation == args[0]) continue;
 				// If it's a history invocation, replace the command with the history command
 				argsLen = parse_input(history_invocation, args, MAX_ARGS_QUANTITY);
 			}
+			else if (historyResult == -1) continue;
 
 			// if we find the alias with the first argument, re-process the previous process
 			int aliasIndex = index_of_alias(args[0], aliasPairs, aliasLen);

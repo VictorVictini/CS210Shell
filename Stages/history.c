@@ -34,39 +34,41 @@ void print_history() {
 }
 
 // Function to invoke a command from history
-char* invoke_from_history(char* input, char* command, int argsLen) {
+int invoke_from_history(char* input, char* command, int argsLen, char** result) {
     // Check if it is a valid history invocation
     if (strcmp(command, "!!") == 0) {
         if (argsLen != 1) {
             printf("history invocation should have no arguments.\n");
-            return command;
+            return -1;
         }
         // Execute the latest command entered in history
         if (history_count > 0) {
-            return strdup(history[history_count - 1].command);
+            *result = strdup(history[history_count - 1].command);
+            return 0;
         } else {
             printf("Error: History is empty.\n");
-            return command;
+            return -1;
         }
     } else if (command[0] == '!' && isdigit(command[1])) {
         if (argsLen != 1) {
             printf("history invocation should have no arguments.\n");
-            return command;
+            return -1;
         }
         // Extract the command number from the input
         int history_number = atoi(command + 1);
 
         // Check if the specified history number is valid
         if (history_number >= 1 && history_number <= history_count) {
-            return strdup(history[history_number - 1].command);
+            *result = strdup(history[history_number - 1].command);
+            return 0;
         } else {
             printf("Error: Invalid history number.\n");
-            return command;
+            return -1;
         }
     } else if (strncmp(command, "!-", 2) == 0 && isdigit(command[2])) {
         if (argsLen != 1) {
             printf("history invocation should have no arguments.\n");
-            return command;
+            return -1;
         }
         // Extract the number from the input
         int offset = atoi(command + 2);
@@ -76,15 +78,16 @@ char* invoke_from_history(char* input, char* command, int argsLen) {
 
         // Check if the calculated history number is valid
         if (offset >= 1 && target_number >= 0 && target_number <= history_count) {
-            return strdup(history[target_number].command);
+            *result = strdup(history[target_number].command);
+            return 0;
         } else {
             printf("Error: Invalid history number.\n");
-            return NULL;
+            return -1;
         }
     } else {
         // Add the entered command to history
         add_to_history(input);
-        return NULL;
+        return 1;
     }
 }
 

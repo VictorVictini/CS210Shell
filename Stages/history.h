@@ -19,7 +19,7 @@ typedef struct {
 // Function declarations
 void add_to_history(char* command);
 void print_history();
-char* invoke_from_history(char* input, char* command, int argsLen);
+int invoke_from_history(char* input, char* command, int argsLen, char** result);
 
 /*
 	Saves the history
