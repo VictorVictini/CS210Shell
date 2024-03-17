@@ -3,7 +3,6 @@
 int main()
 {
 	//Find the user home directory from the environment (3)
-	
 	char* home_dir = GetHomeDirectory();
 
 	//Save the current path (3)
@@ -33,6 +32,11 @@ int main()
 	if (aliasLen == -2) printf("Failed to parse a line in the file \"%s\" at \"%s\"\n", ALIASES_FILE_NAME, home_dir);
 	if (aliasLen == -3) printf("Failed to add to the list of aliases. There are too many aliases. The limit is %d\n", MAX_ALIASES);
 	if (aliasLen < 0) aliasLen = 0;
+
+	// getting some memory for reading inputs and args
+	char* input = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
+	char* inputClone = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
+	char** args = (char**)calloc(MAX_ARGS_QUANTITY, sizeof(char*));
 	
 	//Do while shell has not terminated
 	while(1)
@@ -42,15 +46,12 @@ int main()
 
 		//Read and parse user input (1)
 		// reads input
-		char* input = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
 		if (retrieve_input(input, MAX_BUFFER_LENGTH) == -1) break;
 
 		// creates a copy for manipulation elsewhere
-		char* inputClone = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
 		strcpy(inputClone, input);
 
 		// parses input using copy
-		char** args = (char**)calloc(MAX_ARGS_QUANTITY, sizeof(char*));
 		int argsLen = parse_input(inputClone, args, MAX_ARGS_QUANTITY);
 
 		if (argsLen > 0)
@@ -63,6 +64,7 @@ int main()
 			char* history_invocation = invoke_from_history(input, args[0], argsLen);
 			if (history_invocation != NULL)
 			{
+				if (history_invocation == args[0]) continue;
 				// If it's a history invocation, replace the command with the history command
 				argsLen = parse_input(history_invocation, args, MAX_ARGS_QUANTITY);
 			}
@@ -215,10 +217,6 @@ int main()
 				execute_external_command(args);
 			}
 		}
-		
-		free(input); //frees the buffer (stage_1.c)
-		free(inputClone); //frees the buffer (stage_1.c)
-		free(args); //frees the result (stage_1.c)
 	}
 	// End while (okay yes this comment is pointless)
 	

@@ -39,19 +39,19 @@ char* invoke_from_history(char* input, char* command, int argsLen) {
     if (strcmp(command, "!!") == 0) {
         if (argsLen != 1) {
             printf("history invocation should have no arguments.\n");
-            return NULL;
+            return command;
         }
         // Execute the latest command entered in history
         if (history_count > 0) {
             return strdup(history[history_count - 1].command);
         } else {
             printf("Error: History is empty.\n");
-            return NULL;
+            return command;
         }
     } else if (command[0] == '!' && isdigit(command[1])) {
         if (argsLen != 1) {
             printf("history invocation should have no arguments.\n");
-            return NULL;
+            return command;
         }
         // Extract the command number from the input
         int history_number = atoi(command + 1);
@@ -61,12 +61,12 @@ char* invoke_from_history(char* input, char* command, int argsLen) {
             return strdup(history[history_number - 1].command);
         } else {
             printf("Error: Invalid history number.\n");
-            return NULL;
+            return command;
         }
     } else if (strncmp(command, "!-", 2) == 0 && isdigit(command[2])) {
         if (argsLen != 1) {
             printf("history invocation should have no arguments.\n");
-            return NULL;
+            return command;
         }
         // Extract the number from the input
         int offset = atoi(command + 2);
