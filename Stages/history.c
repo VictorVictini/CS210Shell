@@ -111,9 +111,8 @@ int save_history(char* directory)
     return res;
 }
 
-int load_history(char* directory)
-{
-    //resets history count to 0 to prevent glitches in memory array
+int load_history(char* directory) {
+    // reset history count to 0 to prevent glitches in memory array
     history_count = 0;
 
     // concat file name to directory
@@ -122,15 +121,13 @@ int load_history(char* directory)
 
     // turning into string array
     char** historyStrings = (char**)calloc(HISTORY_SIZE, sizeof(char*));
-    for (int i = 0; i < HISTORY_SIZE; i++)
-    {
+    for (int i = 0; i < HISTORY_SIZE; i++) {
         historyStrings[i] = (char*)calloc(MAX_LINE_LENGTH, sizeof(char));
     }
     int res = get_file(fileLoc, historyStrings, HISTORY_SIZE);
 
     // loading it into the history array
-    for (int i = 0; i < HISTORY_SIZE; i++)
-    {
+    for (int i = 0; i < HISTORY_SIZE; i++) {
         if (strlen(historyStrings[i]) == 0) continue;
         sscanf(historyStrings[i], "%d %[^\n]", &history[i].number, history[i].command);
         history_count++;
@@ -141,4 +138,27 @@ int load_history(char* directory)
     free(historyStrings);
 
     return res;
+}
+
+void clear_history(char* directory) {
+    // reset history count
+    history_count = 0;
+
+    // clear history array
+    for (int i = 0; i < HISTORY_SIZE; i++) {
+        history[i].number = 0;
+        memset(history[i].command, 0, MAX_LINE_LENGTH);
+    }
+
+    // wipe history file
+    char fileLoc[2048];
+    sprintf(fileLoc, "%s/%s", directory, HIST_FILE_NAME);
+    FILE *fp = fopen(fileLoc, "w");
+    if (fp == NULL) {
+        printf("Error: Failed to open history file for writing.\n");
+        return;
+    }
+    fclose(fp);
+
+    printf("History cleared.\n");
 }

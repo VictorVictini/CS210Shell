@@ -33,4 +33,7 @@ int save_history(char* directory);
 */
 int load_history(char* directory);
 
+//clears history (Nathan)
+void clear_history(char* directory);
+
 #endif // STAGE_5_H

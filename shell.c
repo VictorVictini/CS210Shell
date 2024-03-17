@@ -197,6 +197,12 @@ int main()
 					printf("Unalias can only accept exactly one argument.\n");
 				}
 			}
+
+			else if (strcmp("clear", args[0]) == 0 && strcmp("history", args[1]) == 0)
+            		{
+                		clear_history(home_dir);
+            		}
+
 			else 
 			{
 				execute_external_command(args);
