@@ -7,7 +7,7 @@
 #include <string.h>
 
 // constants
-#define MAX_LINE_LENGTH 256
+#define MAX_LINE_LENGTH 513
 
 /*
 	Assigns/re-assigns values to a given file

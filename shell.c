@@ -3,7 +3,6 @@
 int main()
 {
 	//Find the user home directory from the environment (3)
-	
 	char* home_dir = GetHomeDirectory();
 
 	//Save the current path (3)
@@ -17,6 +16,10 @@ int main()
 	}
 	
 	//Load history (6)
+	if (load_history(home_dir) == -1)
+	{
+		printf("Could not find %s at %s when trying to load history.\n", HIST_FILE_NAME, home_dir);
+	}
 	
 	//Load aliases (8)
 	struct AliasPair aliasPairs[MAX_ALIASES];
@@ -29,6 +32,11 @@ int main()
 	if (aliasLen == -2) printf("Failed to parse a line in the file \"%s\" at \"%s\"\n", ALIASES_FILE_NAME, home_dir);
 	if (aliasLen == -3) printf("Failed to add to the list of aliases. There are too many aliases. The limit is %d\n", MAX_ALIASES);
 	if (aliasLen < 0) aliasLen = 0;
+
+	// getting some memory for reading inputs and args
+	char* input = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
+	char* inputClone = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
+	char** args = (char**)malloc(MAX_ARGS_QUANTITY * sizeof(char*));
 	
 	//Do while shell has not terminated
 	while(1)
@@ -38,19 +46,32 @@ int main()
 
 		//Read and parse user input (1)
 		// reads input
-		char* input = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
 		if (retrieve_input(input, MAX_BUFFER_LENGTH) == -1) break;
 
 		// creates a copy for manipulation elsewhere
-		char* inputClone = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
 		strcpy(inputClone, input);
 
 		// parses input using copy
-		char** args = (char**)calloc(MAX_ARGS_QUANTITY, sizeof(char*));
+		memset(args, 0, MAX_ARGS_QUANTITY * sizeof(char*));
 		int argsLen = parse_input(inputClone, args, MAX_ARGS_QUANTITY);
 
-		// if we find the alias with the first argument, re-process the previous process
-		if (argsLen > 0) {
+		if (argsLen > 0)
+		{
+			//While the command is a history invocation or alias then replace it 
+			//with the appropriate command from history or the aliased command 
+			//respectively (5 & 7)
+
+			// Check for history invocations and handle them
+			char* history_invocation = NULL;
+			int historyResult = invoke_from_history(input, args[0], argsLen, &history_invocation); // 0 = success, -1 = fail, 1 = not an invocation
+			if (historyResult == 0)
+			{
+				// If it's a history invocation, replace the command with the history command
+				argsLen = parse_input(history_invocation, args, MAX_ARGS_QUANTITY);
+			}
+			else if (historyResult == -1) continue;
+
+			// if we find the alias with the first argument, re-process the previous process
 			int aliasIndex = index_of_alias(args[0], aliasPairs, aliasLen);
 			if (aliasIndex != -1) {
 				if (argsLen > 1) {
@@ -65,19 +86,11 @@ int main()
 				} else {
 					strcpy(inputClone, (aliasPairs + aliasIndex)->command);
 				}
-				args = (char**)calloc(MAX_ARGS_QUANTITY, sizeof(char*));
+				
 				argsLen = parse_input(inputClone, args, MAX_ARGS_QUANTITY);
 			}
-		}
 
-		if (argsLen > 0)
-		{
 			if (strcmp("exit", args[0]) == 0) break;
-			
-			//While the command is a history invocation or alias then replace it 
-			//with the appropriate command from history or the aliased command 
-			//respectively (5 & 7)
-
 			if (strcmp("getpath", args[0]) == 0)
 			{
 				if (argsLen > 1)
@@ -121,6 +134,18 @@ int main()
 				else
 				{
 					printf("Too many arguments provided for cd\n");
+				}
+			}
+			else if (strcmp("history", args[0]) == 0)
+			{
+				if (argsLen == 1)
+				{
+					// Print the history
+					print_history();
+				}
+				else
+				{
+					printf("history should have no arguments.\n");
 				}
 			}
 			else if (strcmp("alias", args[0]) == 0)
@@ -171,20 +196,37 @@ int main()
 					printf("Unalias can only accept exactly one argument.\n");
 				}
 			}
+			else if (argsLen > 1 && strcmp("clear", args[0]) == 0 && strcmp("history", args[1]) == 0)
+			{
+				if (argsLen == 2)
+				{
+					if (clear_history(home_dir) == -1)
+					{
+						printf("Error: Failed to open history file for writing.\n");
+					}
+					else
+					{
+						printf("History cleared.\n");
+					}
+				}
+				else
+				{
+					printf("clear history does not accept arguments.\n");
+				}
+			}
 			else 
 			{
 				execute_external_command(args);
 			}
 		}
-		
-		free(input); //frees the buffer (stage_1.c)
-		free(inputClone); //frees the buffer (stage_1.c)
-		free(args); //frees the result (stage_1.c)
 	}
 	// End while (okay yes this comment is pointless)
 	
-	//From here down *could* be a separate exit function, depends on your logic
 	//Save history (6)
+	if (save_history(home_dir) == -1)
+	{
+		printf("Could not write to %s at %s when trying to save history.\n", HIST_FILE_NAME, home_dir);
+	}
 	
 	//Save aliases (8)
 	if (set_alias_file(home_dir, ALIASES_FILE_NAME, aliasPairs, aliasLen) == -1) printf("Failed to add aliases to the file \"%s\" at \"%s\"\n", ALIASES_FILE_NAME, home_dir);
