@@ -19,7 +19,7 @@ typedef struct {
 // Function declarations
 void add_to_history(char* command);
 void print_history();
-int invoke_from_history(char* input, char* command, int argsLen, char** result);
+int invoke_from_history(char* input, char* command, char** result);
 
 /*
 	Saves the history
@@ -35,5 +35,14 @@ int load_history(char* directory);
 
 //clears history (Nathan)
 int clear_history(char* directory);
+
+/*
+	Determines if the given command is a history invocation
+	inputs: the string
+	outputs: 0 if it is a history invocation, otherwise -1
+	side effects: n/a
+	written by Danyal
+*/
+int is_history_invocation(char* command);
 
 #endif // STAGE_5_H

@@ -34,8 +34,9 @@ int main()
 	if (aliasLen < 0) aliasLen = 0;
 
 	// getting some memory for reading inputs and args
-	char* input = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
-	char* inputClone = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
+	char* originInput = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
+	char* recentInput = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
+	char* backgroundInput = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
 	char** args = (char**)malloc(MAX_ARGS_QUANTITY * sizeof(char*));
 	
 	//Do while shell has not terminated
@@ -44,16 +45,17 @@ int main()
 		//Display prompt (1)
 		display_prompt();
 
-		//Read and parse user input (1)
-		// reads input
-		if (retrieve_input(input, MAX_BUFFER_LENGTH) == -1) break;
+		//Read and parse user originInput (1)
+		// reads originInput
+		if (retrieve_input(originInput, MAX_BUFFER_LENGTH) == -1) break;
 
 		// creates a copy for manipulation elsewhere
-		strcpy(inputClone, input);
+		strcpy(backgroundInput, originInput);
+		strcpy(recentInput, originInput);
 
-		// parses input using copy
+		// parses originInput using copy
 		memset(args, 0, MAX_ARGS_QUANTITY * sizeof(char*));
-		int argsLen = parse_input(inputClone, args, MAX_ARGS_QUANTITY);
+		int argsLen = parse_input(backgroundInput, args, MAX_ARGS_QUANTITY);
 
 		if (argsLen > 0)
 		{
@@ -61,33 +63,81 @@ int main()
 			//with the appropriate command from history or the aliased command 
 			//respectively (5 & 7)
 
-			// Check for history invocations and handle them
-			char* history_invocation = NULL;
-			int historyResult = invoke_from_history(input, args[0], argsLen, &history_invocation); // 0 = success, -1 = fail, 1 = not an invocation
-			if (historyResult == 0)
-			{
-				// If it's a history invocation, replace the command with the history command
-				argsLen = parse_input(history_invocation, args, MAX_ARGS_QUANTITY);
+			// list to store all iterated commands, used to look for cycles
+			char* list[MAX_ITERATIONS];
+			for (int i = 0; i < MAX_ITERATIONS; i++) {
+				list[i] = (char*)calloc(sizeof(char), MAX_BUFFER_LENGTH);
 			}
-			else if (historyResult == -1) continue;
 
-			// if we find the alias with the first argument, re-process the previous process
-			int aliasIndex = index_of_alias(args[0], aliasPairs, aliasLen);
-			if (aliasIndex != -1) {
-				if (argsLen > 1) {
-					// get the length of the first argument and add everything else from the input line
-					// consequently reconstructing the line to fit expectations
-					int len = 0;
-					while (*(*args + len) != '\0') {
-						len++;
-					}
-					strcpy(inputClone, (aliasPairs + aliasIndex)->command);
-					strcat(inputClone, input + len);
-				} else {
-					strcpy(inputClone, (aliasPairs + aliasIndex)->command);
+			// loop until an error occurs, the max iterations occur, or it naturally ends
+			int listLen = 0, error = 0;
+			while (error == 0 && listLen < MAX_ITERATIONS) {
+				// the command has been repeated
+				if (contains(recentInput, list, listLen) == 0) {
+					printf("Could not run the command as a cycle had occured.\n");
+					error = -1;
+					break;
 				}
+
+				// adding it to the list so we can check if it is repeated later
+				strcpy(list[listLen], recentInput);
+				listLen++;
+
+				// making a history invocation if it is one
+				if (is_history_invocation(backgroundInput) == 0) {
+					if (argsLen == 1) {
+						char* history_invocation = NULL;
+						int historyResult = invoke_from_history(backgroundInput, args[0], &history_invocation); // 0 = success, -1 = fail, 1 = not an invocation
+						if (historyResult == 0) {
+							// If it's a history invocation, replace the command with the history command
+							strcpy(backgroundInput, history_invocation);
+							strcpy(recentInput, backgroundInput);
+							argsLen = parse_input(backgroundInput, args, MAX_ARGS_QUANTITY);
+						} else if (historyResult == -1) {
+							error = -1;
+							break;
+						}
+					} else {
+						printf("history invocation should have no arguments.\n");
+						error = -1;
+						break;
+					}
+
+				// replacing relevant alias if it is one
+				} else if (argsLen > 0 && index_of_alias(args[0], aliasPairs, aliasLen) != -1) {
+					// if we find the alias with the first argument, re-process the previous process
+					int aliasIndex = index_of_alias(args[0], aliasPairs, aliasLen);
+					if (argsLen > 1) {
+						// get the length of the first argument and add everything else from the input line
+						// consequently reconstructing the line to fit expectations
+						int len = 0;
+						while (*(*args + len) != '\0') {
+							len++;
+						}
+						strcpy(backgroundInput, (aliasPairs + aliasIndex)->command);
+						strcat(backgroundInput, recentInput + len);
+					} else {
+						strcpy(backgroundInput, (aliasPairs + aliasIndex)->command);
+					}
+					strcpy(recentInput, backgroundInput);
+					argsLen = parse_input(backgroundInput, args, MAX_ARGS_QUANTITY);
 				
-				argsLen = parse_input(inputClone, args, MAX_ARGS_QUANTITY);
+				// normal command/rubbish so can end this
+				} else {
+					break;
+				}
+			}
+
+			// if the command is not a history invocation, add it to history
+			if (is_history_invocation(originInput) != 0) add_to_history(originInput);
+
+			// if any errors occur, end this command execution
+			if (error != 0) continue;
+			
+			// if the max iterations occur, assume a cycle
+			if (listLen >= MAX_ITERATIONS) {
+				printf("Could not run the command as a cycle had occured.\n");
+				continue;
 			}
 
 			if (strcmp("exit", args[0]) == 0) break;
@@ -158,9 +208,9 @@ int main()
 				{
 					// creates a copy for manipulation elsewhere
 					char* inputCopy = (char*)malloc(MAX_BUFFER_LENGTH * sizeof(char));
-					strcpy(inputCopy, input);
+					strcpy(inputCopy, recentInput);
 
-					// parses input using copy
+					// parses originInput using copy
 					char** aliasArgs = (char**)calloc(2, sizeof(char*));
 					if (parse_alias_line(inputCopy + 6, aliasArgs) == 0) { // inputCopy + 6 skips "alias "
 						int tempLen = add_alias(aliasArgs[0], aliasArgs[1], aliasPairs, aliasLen);
@@ -183,12 +233,12 @@ int main()
 			{
 				if (argsLen == 2)
 				{
-					int tempLen = remove_alias(input + 8, aliasPairs, aliasLen);
-					if (tempLen != -1) { // input + 8 skips "unalias "
+					int tempLen = remove_alias(recentInput + 8, aliasPairs, aliasLen);
+					if (tempLen != -1) { // originInput + 8 skips "unalias "
 						aliasLen = tempLen;
-						printf("Successfully removed alias \"%s\"\n", input + 8);
+						printf("Successfully removed alias \"%s\"\n", recentInput + 8);
 					} else {
-						printf("Could not find provided alias \"%s\".\n", input + 8);
+						printf("Could not find provided alias \"%s\".\n", recentInput + 8);
 					}
 				}
 				else
