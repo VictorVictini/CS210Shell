@@ -18,11 +18,14 @@ int get_file(const char* file_location, char** result, int max_lines) {
         fclose(fptr);
         return -1;
     }
-    for (int i = 0; i < max_lines && fgets(currLine, MAX_LINE_LENGTH, fptr) != NULL; i++) {
-        currLine[strcspn(currLine, "\n")] = '\0';
-        strcpy(*(result + i), currLine);
+    int len = 0;
+    while (len < max_lines && fgets(currLine, MAX_LINE_LENGTH, fptr) != NULL) {
+        int index = strcspn(currLine, "\n");
+        if (*(currLine + index) == '\n') currLine[index] = '\0';
+        strcpy(*(result + len), currLine);
+        len++;
     }
     fclose(fptr);
     free(currLine);
-    return 0;
+    return len;
 }

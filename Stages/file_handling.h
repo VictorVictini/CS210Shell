@@ -1,10 +1,13 @@
+#ifndef FILE_HANDLING
+#define FILE_HANDLING
+
 // imports
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 // constants
-#define MAX_LINE_LENGTH 256
+#define MAX_LINE_LENGTH 513
 
 /*
 	Assigns/re-assigns values to a given file
@@ -18,8 +21,10 @@ int set_file(const char* file_location, char** data, const int len);
 /*
 	Retrieves data from file and places into 'result' parameter
 	inputs: file location, result parameter where data is stored, maximum number of lines to check the file for
-	outputs: returns -1 if something went wrong, otherwise 0
+	outputs: returns -1 if something went wrong, otherwise the number of lines successfully parsed
 	side effects: will create segfault error if memory is not allocated correctly for result parameter
 	written by Danyal
 */
 int get_file(const char* file_location, char** result, int max_lines);
+
+#endif
