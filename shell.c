@@ -22,7 +22,7 @@ int main()
     }
     
     //Load aliases (8)
-    struct AliasPair aliasPairs[MAX_ALIASES];
+    AliasPair aliasPairs[MAX_ALIASES];
     int aliasLen = read_alias_file(home_dir, ALIASES_FILE_NAME, aliasPairs);
     if (aliasLen == -1)
         printf("Failed to open the file \"%s\" at \"%s\"\n", ALIASES_FILE_NAME, home_dir);

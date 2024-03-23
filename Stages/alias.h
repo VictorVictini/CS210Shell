@@ -1,19 +1,22 @@
+#ifndef ALIAS
+#define ALIAS
+
 // imports
 #include "stdlib.h"
 #include "stdio.h"
 #include "string.h"
 #include "file_handling.h"
-#include "stage_1.h" // to get the constant
+#include "input_manipulation.h" // to get the constant
 
 // constants
 #define MAX_ALIASES 10
 #define ALIASES_FILE_NAME ".aliases"
 
-// structs
-struct AliasPair {
+// struct and type definition
+typedef struct {
     char alias[MAX_BUFFER_LENGTH];
     char command[MAX_BUFFER_LENGTH];
-};
+} AliasPair;
 
 /*
     Adds the given alias to the array with its relevant command
@@ -22,7 +25,7 @@ struct AliasPair {
     side effects: will change functionality of any arguments reliant on aliasPairs should the function succeed, assumes alias and command are not NULL and may result in errors otherwise
     written by Danyal
 */
-int add_alias(char* alias, char* command, struct AliasPair* aliasPairs, int len);
+int add_alias(char* alias, char* command, AliasPair* aliasPairs, int len);
 
 /*
     finds the index of a given alias
@@ -31,7 +34,7 @@ int add_alias(char* alias, char* command, struct AliasPair* aliasPairs, int len)
     side effects: assumes alias is not null and may result in errors otherwise
     written by Danyal
 */
-int index_of_alias(char* alias, struct AliasPair* aliasPairs, int len);
+int index_of_alias(char* alias, AliasPair* aliasPairs, int len);
 
 /*
     Remove the given alias from the array of pairs
@@ -40,7 +43,7 @@ int index_of_alias(char* alias, struct AliasPair* aliasPairs, int len);
     side effects: will change functionality reliant on aliases should the function succeed, assumes alias is not null and may result in errors otherwise
     written by Danyal
 */
-int remove_alias(char* alias, struct AliasPair* aliasPairs, int len);
+int remove_alias(char* alias, AliasPair* aliasPairs, int len);
 
 /*
     prints the details in the alias pairs
@@ -49,7 +52,7 @@ int remove_alias(char* alias, struct AliasPair* aliasPairs, int len);
     side effects: n/a
     written by Danyal
 */
-void print_alias(struct AliasPair* aliasPairs, int len);
+void print_alias(AliasPair* aliasPairs, int len);
 
 /*
     Parses a line of the input for the expected format (parse_input is not enough, hence custom parsing is necessary)
@@ -67,7 +70,7 @@ int parse_alias_line(char* str, char** args);
     side effects: anything reliant on aliasPairs will likely be changed, even if the parsing should fail, any extra lines will be 'cut off'/ignored, will overwrite data held in aliasPairs
     written by Danyal
 */
-int read_alias_file(const char* fileDirectory, const char* fileName, struct AliasPair* aliasPairs);
+int read_alias_file(const char* fileDirectory, const char* fileName, AliasPair* aliasPairs);
 
 /*
     adds the aliasPairs data to the given file
@@ -76,4 +79,6 @@ int read_alias_file(const char* fileDirectory, const char* fileName, struct Alia
     side effects: n/a
     written by Danyal
 */
-int set_alias_file(const char* fileLocation, const char* fileName, struct AliasPair* aliasPairs, int len);
+int set_alias_file(const char* fileLocation, const char* fileName, AliasPair* aliasPairs, int len);
+
+#endif
