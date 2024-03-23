@@ -1,7 +1,7 @@
 #include "changing_dir.h"
 
-void ChangeDirectory(char* input)
+void change_directory(char* dir)
 {
-    if(chdir(input) != 0)
-        perror(input);
+    if(chdir(dir) != 0)
+        perror(dir);
 }
