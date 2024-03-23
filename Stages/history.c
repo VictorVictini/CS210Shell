@@ -34,13 +34,8 @@ void print_history() {
 }
 
 // Function to invoke a command from history
-int invoke_from_history(char* input, char* command, int argsLen, char** result) {
-    // Check if it is a valid history invocation
+int invoke_from_history(char* input, char* command, char** result) {
     if (strcmp(command, "!!") == 0) {
-        if (argsLen != 1) {
-            printf("history invocation should have no arguments.\n");
-            return -1;
-        }
         // Execute the latest command entered in history
         if (history_count > 0) {
             *result = strdup(history[history_count - 1].command);
@@ -50,10 +45,6 @@ int invoke_from_history(char* input, char* command, int argsLen, char** result) 
             return -1;
         }
     } else if (command[0] == '!' && isdigit(command[1])) {
-        if (argsLen != 1) {
-            printf("history invocation should have no arguments.\n");
-            return -1;
-        }
         // Extract the command number from the input
         int history_number = atoi(command + 1);
 
@@ -66,10 +57,6 @@ int invoke_from_history(char* input, char* command, int argsLen, char** result) 
             return -1;
         }
     } else if (strncmp(command, "!-", 2) == 0 && isdigit(command[2])) {
-        if (argsLen != 1) {
-            printf("history invocation should have no arguments.\n");
-            return -1;
-        }
         // Extract the number from the input
         int offset = atoi(command + 2);
 
@@ -84,14 +71,9 @@ int invoke_from_history(char* input, char* command, int argsLen, char** result) 
             printf("Error: Invalid history number.\n");
             return -1;
         }
-    } else {
-        // Add the entered command to history
-        add_to_history(input);
         return 1;
     }
 }
-
-
 
 int save_history(char* directory)
 {
@@ -158,4 +140,9 @@ int clear_history(char* directory) {
     char fileLoc[2048];
     sprintf(fileLoc, "%s/%s", directory, HIST_FILE_NAME);
     return set_file(fileLoc, NULL, 0);
+}
+
+int is_history_invocation(char* command) {
+    if (*command == '!') return 0;
+    return -1;
 }
