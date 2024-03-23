@@ -1,4 +1,4 @@
-#include "stage_1.h"
+#include "input_manipulation.h"
 
 void display_prompt()
 {

@@ -1,4 +1,4 @@
-#include "Stages/stage_1.h"
+#include "Stages/input_manipulation.h"
 #include "Stages/stage_2.h"
 #include "Stages/stage_3.h"
 #include "Stages/stage_4.h"
