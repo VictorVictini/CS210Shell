@@ -1,8 +1,15 @@
 #include "stage_9.h"
 
-int contains(char* target, char** list, int len) {
-    for (int i = 0; i < len; i++) {
-        if (strcmp(target, *(list + i)) == 0) return 0;
+void add_node(ListNode* node, LinkedList* list) {
+    node->next = *list;
+    *list = node;
+}
+
+int contains(char* target, LinkedList list) {
+    ListNode* temp = list;
+    while (temp != NULL) {
+        if (strcmp(target, temp->command) == 0) return 0;
+        temp = temp->next;
     }
     return -1;
 }

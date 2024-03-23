@@ -63,25 +63,25 @@ int main()
 			//with the appropriate command from history or the aliased command 
 			//respectively (5 & 7)
 
-			// list to store all iterated commands, used to look for cycles
-			char* list[MAX_ITERATIONS];
-			for (int i = 0; i < MAX_ITERATIONS; i++) {
-				list[i] = (char*)calloc(sizeof(char), MAX_BUFFER_LENGTH);
-			}
+			// linked list to store all iterated commands, used to look for cycles
+			LinkedList list = NULL;
 
 			// loop until an error occurs, the max iterations occur, or it naturally ends
-			int listLen = 0, error = 0;
-			while (error == 0 && listLen < MAX_ITERATIONS) {
+			int error = 0;
+			while (1) {
 				// the command has been repeated
-				if (contains(recentInput, list, listLen) == 0) {
+				if (contains(recentInput, list) == 0) {
 					printf("Could not run the command as a cycle had occured.\n");
 					error = -1;
 					break;
 				}
 
 				// adding it to the list so we can check if it is repeated later
-				strcpy(list[listLen], recentInput);
-				listLen++;
+				ListNode* node;
+				node = (ListNode*)malloc(sizeof(ListNode*));
+				node->command = (char*)malloc(sizeof(char) * MAX_BUFFER_LENGTH);
+				strcpy(node->command, recentInput);
+				add_node(node, &list);
 
 				// making a history invocation if it is one
 				if (is_history_invocation(backgroundInput) == 0) {
@@ -128,17 +128,19 @@ int main()
 				}
 			}
 
+			// freeing list
+			while (list != NULL) {
+				free(list->command);
+				ListNode* next = list->next;
+				free(list);
+				list = next;
+			}
+
 			// if the command is not a history invocation, add it to history
 			if (is_history_invocation(originInput) != 0) add_to_history(originInput);
 
 			// if any errors occur, end this command execution
 			if (error != 0) continue;
-			
-			// if the max iterations occur, assume a cycle
-			if (listLen >= MAX_ITERATIONS) {
-				printf("Could not run the command as a cycle had occured.\n");
-				continue;
-			}
 
 			if (strcmp("exit", args[0]) == 0) break;
 			if (strcmp("getpath", args[0]) == 0)
