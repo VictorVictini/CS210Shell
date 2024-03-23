@@ -55,7 +55,7 @@ int main()
 
 		// parses originInput using copy
 		memset(args, 0, MAX_ARGS_QUANTITY * sizeof(char*));
-		int argsLen = parse_input(backgroundInput, args, MAX_ARGS_QUANTITY);
+		int argsLen = parse_input(backgroundInput, args);
 
 		if (argsLen > 0)
 		{
@@ -92,7 +92,7 @@ int main()
 							// If it's a history invocation, replace the command with the history command
 							strcpy(backgroundInput, history_invocation);
 							strcpy(recentInput, backgroundInput);
-							argsLen = parse_input(backgroundInput, args, MAX_ARGS_QUANTITY);
+							argsLen = parse_input(backgroundInput, args);
 						} else if (historyResult == -1) {
 							error = -1;
 							break;
@@ -120,7 +120,7 @@ int main()
 						strcpy(backgroundInput, (aliasPairs + aliasIndex)->command);
 					}
 					strcpy(recentInput, backgroundInput);
-					argsLen = parse_input(backgroundInput, args, MAX_ARGS_QUANTITY);
+					argsLen = parse_input(backgroundInput, args);
 				
 				// normal command/rubbish so can end this
 				} else {

@@ -28,9 +28,9 @@ int retrieve_input(char* str, int maxLen);
 
 /*
 	Parses provided input into tokens
-	inputs: string to be split by the tokens, the args as an array of strings/equivalent, the maximum number of args
+	inputs: string to be split by the tokens, the args as an array of strings/equivalent
 	outputs: the length of the arguments
 	side effects: any functionality reliant on the args may change
-	written by Fady, Danyal
+	written by Mohamed, Danyal
 */
-int parse_input(char* str, char** args, int maxArgs);
+int parse_input(char* str, char** args);
