@@ -1,7 +1,7 @@
 #include "Stages/input_manipulation.h"
 #include "Stages/exec.h"
 #include "Stages/directory_path_manipulation.h"
-#include "Stages/stage_4.h"
+#include "Stages/changing_dir.h"
 #include "Stages/history.h"
 #include "Stages/linked_list.h"
 #include "Stages/file_handling.h"
