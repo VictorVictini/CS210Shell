@@ -22,14 +22,14 @@ void print_history();
 int invoke_from_history(char* input, char* command, char** result);
 
 /*
-	Saves the history
-	written by Mohamed
+    Saves the history
+    written by Mohamed
 */
 int save_history(char* directory);
 
 /*
-	Loads the history
-	written by Mohamed
+    Loads the history
+    written by Mohamed
 */
 int load_history(char* directory);
 
@@ -37,11 +37,11 @@ int load_history(char* directory);
 int clear_history(char* directory);
 
 /*
-	Determines if the given command is a history invocation
-	inputs: the string
-	outputs: 0 if it is a history invocation, otherwise -1
-	side effects: n/a
-	written by Danyal
+    Determines if the given command is a history invocation
+    inputs: the string
+    outputs: 0 if it is a history invocation, otherwise -1
+    side effects: n/a
+    written by Danyal
 */
 int is_history_invocation(char* command);
 
