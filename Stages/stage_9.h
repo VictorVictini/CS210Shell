@@ -1,11 +1,8 @@
-#ifndef STAGE_9
-#define STAGE_9
+#ifndef LINKED_LIST
+#define LINKED_LIST
 
 // imports
 #include <string.h>
-
-// constants
-#define MAX_ITERATIONS 500
 
 // types for linked list
 typedef struct Node {
@@ -25,7 +22,7 @@ typedef ListNode* LinkedList;
 void add_node(ListNode* node, LinkedList* list);
 
 /*
-    Finds the node value in the linkedlist
+    Finds if the node value is in the linkedlist
     inputs: the node value (string/char*), the linked list
     outputs: 0 if found, otherwise -1
     side effects: n/a
