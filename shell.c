@@ -190,11 +190,11 @@ int main()
         {
             if (argsLen == 1)
             {
-                ChangeDirectory(home_dir);
+                change_directory(home_dir);
             }
             else if(argsLen == 2)
             {
-                ChangeDirectory(args[1]);
+                change_directory(args[1]);
             }
             else
             {
