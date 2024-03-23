@@ -32,9 +32,9 @@ int parse_input(char* str, char** args)
 	int len = 0;
 	while (len < MAX_ARGS_QUANTITY && currArg != NULL)
 	{
-		*(args + len) = currArg;
-		len++;
+		args[len] = currArg;
 		currArg = strtok(NULL, TOKENS);
+		len++;
 	}
 	return len;
 }
