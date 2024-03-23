@@ -11,8 +11,8 @@
 
 // structs
 struct AliasPair {
-    char* alias;
-    char* command;
+    char alias[MAX_BUFFER_LENGTH];
+    char command[MAX_BUFFER_LENGTH];
 };
 
 /*
