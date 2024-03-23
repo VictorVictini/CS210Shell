@@ -16,7 +16,7 @@
     side effects: may change other functionality reliant on the file's data, will cause a segfault if the length of the array of strings is wrong
     written by Danyal
 */
-int set_file(const char* file_location, char** data, const int len);
+int set_file(const char* fileLocation, char** data, const int len);
 
 /*
     Retrieves data from file and places into 'result' parameter
@@ -25,6 +25,6 @@ int set_file(const char* file_location, char** data, const int len);
     side effects: will create segfault error if memory is not allocated correctly for result parameter
     written by Danyal
 */
-int get_file(const char* file_location, char** result, int max_lines);
+int get_file(const char* fileLocation, char** result, int maxLines);
 
 #endif
