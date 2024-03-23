@@ -1,4 +1,4 @@
-#include "stage_3.h"
+#include "directory_path_manipulation.h"
 
 char* GetWorkingDirectory()
 {

@@ -1,4 +1,4 @@
-#include "stage_2.h"
+#include "exec.h"
 
 void execute_external_command(char **args) {
     pid_t pid = fork();
