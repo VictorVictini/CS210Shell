@@ -7,7 +7,7 @@
 #include "file_handling.h"
 
 // constants
-#define HIST_FILE_NAME ".hist_file"
+#define HIST_FILE_NAME ".hist_list"
 #define HISTORY_SIZE 20
 
 // Struct to represent a history entry
