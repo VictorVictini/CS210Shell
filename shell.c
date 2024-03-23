@@ -3,13 +3,15 @@
 int main()
 {
     //Find the user home directory from the environment (3)
-    char* home_dir = GetHomeDirectory();
+    char home_dir[MAX_PATH_LENGTH];
+    get_home_directory(home_dir);
 
     //Save the current path (3)
-    char* saved_path = GetPathEnv();
+    char saved_path[MAX_PATH_LENGTH];
+    get_path_env(saved_path);
 
     //Set current working directory to user home directory (3)
-    if (ChangeWorkingDirectory(home_dir) == -1)
+    if (change_working_directory(home_dir) == -1)
     {
         printf("Failed to change working directory.\n");
         return 1;
@@ -153,9 +155,11 @@ int main()
         if (is_history_invocation(originInput) != 0) add_to_history(originInput);
 
         // if any errors occur, end this command execution
-        if (error != 0) continue;
+        if (error != 0)
+            continue;
 
-        if (strcmp("exit", args[0]) == 0) break;
+        if (strcmp("exit", args[0]) == 0)
+            break;
         if (strcmp("getpath", args[0]) == 0)
         {
             if (argsLen > 1)
@@ -164,9 +168,9 @@ int main()
             }
             else
             {
-                char* path = GetPathEnv();
+                char path[MAX_PATH_LENGTH];
+                get_path_env(path);
                 printf("%s\n", path);
-                free(path);
             }
         }
         else if (strcmp("setpath", args[0]) == 0)
@@ -182,7 +186,7 @@ int main()
             else
             {
                 char* newPath = args[1];
-                ChangePathEnv(newPath);
+                change_path_env(newPath);
                 printf("New path changed to %s\n", newPath);
             }
         }
@@ -205,7 +209,6 @@ int main()
         {
             if (argsLen == 1)
             {
-                // Print the history
                 print_history();
             }
             else
@@ -305,9 +308,9 @@ int main()
         printf("Failed to add aliases to the file \"%s\" at \"%s\"\n", ALIASES_FILE_NAME, home_dir);
     
     //Restore original path (3)
-    ChangePathEnv(saved_path);
-    printf("Path restored: %s\n", GetPathEnv());
-    
-    //Exit
+    change_path_env(saved_path);
+    char restoredPath[MAX_PATH_LENGTH];
+    get_path_env(restoredPath);
+    printf("Path restored: %s\n", restoredPath);
     return 0;
 }

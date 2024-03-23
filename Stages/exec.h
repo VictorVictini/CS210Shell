@@ -7,6 +7,13 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-void execute_external_command(char **args);
+/*
+    Executes an external command
+    inputs: the arguments to execute
+    outputs: n/a
+    side effects: n/a
+    written by Nathan
+*/
+void execute_external_command(char* args[]);
 
-#endif // STAGE_2_H
+#endif
