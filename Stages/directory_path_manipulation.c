@@ -21,3 +21,9 @@ void get_path_env(char* path)
     strncpy(path, getenv("PATH"), MAX_PATH_LENGTH - 1);
     path[MAX_PATH_LENGTH - 1] = '\0';
 }
+
+void change_directory(char* dir)
+{
+    if(chdir(dir) != 0)
+        perror(dir);
+}

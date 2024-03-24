@@ -45,4 +45,13 @@ int change_path_env(const char* path);
 */
 void get_path_env(char* path);
 
+/*
+    Changes the directory to the provided one
+    inputs: the directory to change to
+    outputs: n/a
+    side effects: functionality dependant on the current working directory will be changed
+    written by Lex Atkinson
+*/
+void change_directory(char* dir);
+
 #endif
