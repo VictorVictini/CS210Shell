@@ -40,7 +40,22 @@ int invoke_from_history(char* input, char* command, char* history[], int len)
     }
     else // parse the number
     {
-        sscanf(input, "!%d", &index);
+        // validates the format of !N or !-N where N is a positive whole number
+        int chrIndex = 1;
+        if (input[chrIndex] == '-')
+            chrIndex++;
+        while (input[chrIndex] != '\0')
+        {
+            if (input[chrIndex] < '0' || input[chrIndex] > '9')
+                return -2;
+            chrIndex++;
+        }
+
+        // parses it with further format/issue checks
+        int format = sscanf(input, "!%d", &index);
+        if (format == EOF || format != 1)
+            return -2;
+
         if (index < 0) // if it is negative, assume it is !-N so add the length to get a normal history execution
             index += len + 1;
     }
