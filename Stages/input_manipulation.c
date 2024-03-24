@@ -26,7 +26,7 @@ int retrieve_input(char* str, int maxLen)
     return 0;
 }
 
-int parse_input(char* str, char** args)
+int parse_input(char* str, char* args[])
 {
     char* currArg = strtok(str, TOKENS);
     int len = 0;

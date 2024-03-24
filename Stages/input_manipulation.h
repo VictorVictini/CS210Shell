@@ -1,3 +1,6 @@
+#ifndef INPUT_MANIPULATION
+#define INPUT_MANIPULATION
+
 // imports
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,4 +36,6 @@ int retrieve_input(char* str, int maxLen);
     side effects: any functionality reliant on the args may change
     written by Mohamed, Danyal
 */
-int parse_input(char* str, char** args);
+int parse_input(char* str, char* args[]);
+
+#endif
