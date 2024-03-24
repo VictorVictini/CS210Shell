@@ -18,14 +18,20 @@ int main()
     }
     
     //Load history (6)
-    if (load_history(home_dir) == -1)
+    char* history[HISTORY_SIZE];
+    for (int i = 0; i < HISTORY_SIZE; i++)
+    {
+        history[i] = (char*)malloc(sizeof(char) * MAX_BUFFER_LENGTH);
+    }
+    int historyLen = load_history(home_dir, history);
+    if (historyLen == -1)
     {
         printf("Could not find %s at %s when trying to load history.\n", HIST_FILE_NAME, home_dir);
     }
     
     //Load aliases (8)
     AliasPair aliasPairs[MAX_ALIASES];
-    int aliasLen = read_alias_file(home_dir, ALIASES_FILE_NAME, aliasPairs);
+    int aliasLen = read_alias_file(home_dir, aliasPairs);
     if (aliasLen == -1)
         printf("Failed to open the file \"%s\" at \"%s\"\n", ALIASES_FILE_NAME, home_dir);
     if (aliasLen == -2)
@@ -86,29 +92,31 @@ int main()
             // making a history invocation if it is one
             if (is_history_invocation(backgroundInput) == 0)
             {
-                if (argsLen == 1)
-                {
-                    char* history_invocation = NULL;
-                    int historyResult = invoke_from_history(backgroundInput, args[0], &history_invocation); // 0 = success, -1 = fail, 1 = not an invocation
-                    if (historyResult == 0)
-                    {
-                        // If it's a history invocation, replace the command with the history command
-                        strcpy(backgroundInput, history_invocation);
-                        strcpy(recentInput, backgroundInput);
-                        argsLen = parse_input(backgroundInput, args);
-                    }
-                    else if (historyResult == -1)
-                    {
-                        error = -1;
-                        break;
-                    }
-                }
-                else
+                if (argsLen != 1)
                 {
                     printf("history invocation should have no arguments.\n");
                     error = -1;
                     break;
                 }
+
+                if (historyLen == 0)
+                {
+                    printf("Error: History is empty.\n");
+                    error = -1;
+                    break;
+                }
+
+                // replaces the recentInput with the relevant command from history, or returns an error -1
+                if (invoke_from_history(backgroundInput, recentInput, history, historyLen) == -1)
+                {
+                    printf("Error: invalid number provided\n");
+                    error = -1;
+                    break;
+                }
+                
+                // parse remaining parts for the history command
+                strcpy(backgroundInput, recentInput);
+                argsLen = parse_input(backgroundInput, args);
 
             // replacing relevant alias if it is one
             }
@@ -152,7 +160,10 @@ int main()
         }
 
         // if the command is not a history invocation, add it to history
-        if (is_history_invocation(originInput) != 0) add_to_history(originInput);
+        if (is_history_invocation(originInput) != 0)
+        {
+            historyLen = add_to_history(originInput, history, historyLen);
+        }
 
         // if any errors occur, end this command execution
         if (error != 0)
@@ -209,7 +220,7 @@ int main()
         {
             if (argsLen == 1)
             {
-                print_history();
+                print_history(history, historyLen);
             }
             else
             {
@@ -276,14 +287,8 @@ int main()
         {
             if (argsLen == 2)
             {
-                if (clear_history(home_dir) == -1)
-                {
-                    printf("Error: Failed to open history file for writing.\n");
-                }
-                else
-                {
-                    printf("History cleared.\n");
-                }
+                historyLen = 0;
+                printf("Successfully cleared history\n");
             }
             else
             {
@@ -298,13 +303,18 @@ int main()
     // End while (okay yes this comment is pointless)
     
     //Save history (6)
-    if (save_history(home_dir) == -1)
+    if (save_history(home_dir, history, historyLen) == -1)
     {
         printf("Could not write to %s at %s when trying to save history.\n", HIST_FILE_NAME, home_dir);
     }
+
+    // freeing history
+    for (int i = 0; i < HISTORY_SIZE; i++) {
+        free(history[i]);
+    }
     
     //Save aliases (8)
-    if (set_alias_file(home_dir, ALIASES_FILE_NAME, aliasPairs, aliasLen) == -1)
+    if (set_alias_file(home_dir, aliasPairs, aliasLen) == -1)
         printf("Failed to add aliases to the file \"%s\" at \"%s\"\n", ALIASES_FILE_NAME, home_dir);
     
     //Restore original path (3)

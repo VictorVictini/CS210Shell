@@ -97,11 +97,11 @@ int parse_alias_line(char* str, char** args)
     return 0;
 }
 
-int read_alias_file(const char* fileDirectory, const char* fileName, AliasPair* aliasPairs)
+int read_alias_file(const char* fileDirectory, AliasPair* aliasPairs)
 {
     // creating file location
     char fileLocation[MAX_BUFFER_LENGTH];
-    sprintf(fileLocation, "%s/%s", fileDirectory, fileName);
+    sprintf(fileLocation, "%s/%s", fileDirectory, ALIASES_FILE_NAME);
 
     // reading from file
     char* fileData[MAX_ALIASES];
@@ -131,11 +131,11 @@ int read_alias_file(const char* fileDirectory, const char* fileName, AliasPair* 
     return aliasLen;
 }
 
-int set_alias_file(const char* fileDirectory, const char* fileName, AliasPair* aliasPairs, int len)
+int set_alias_file(const char* fileDirectory, AliasPair* aliasPairs, int len)
 {
     // creating file location
     char fileLocation[MAX_BUFFER_LENGTH];
-    sprintf(fileLocation, "%s/%s", fileDirectory, fileName);
+    sprintf(fileLocation, "%s/%s", fileDirectory, ALIASES_FILE_NAME);
 
     // setting fileData to be an array of string of the required format
     char* fileData[len];

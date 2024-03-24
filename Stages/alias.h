@@ -70,7 +70,7 @@ int parse_alias_line(char* str, char** args);
     side effects: anything reliant on aliasPairs will likely be changed, even if the parsing should fail, any extra lines will be 'cut off'/ignored, will overwrite data held in aliasPairs
     written by Danyal
 */
-int read_alias_file(const char* fileDirectory, const char* fileName, AliasPair* aliasPairs);
+int read_alias_file(const char* fileDirectory, AliasPair* aliasPairs);
 
 /*
     adds the aliasPairs data to the given file
@@ -79,6 +79,6 @@ int read_alias_file(const char* fileDirectory, const char* fileName, AliasPair* 
     side effects: n/a
     written by Danyal
 */
-int set_alias_file(const char* fileLocation, const char* fileName, AliasPair* aliasPairs, int len);
+int set_alias_file(const char* fileLocation, AliasPair* aliasPairs, int len);
 
 #endif
