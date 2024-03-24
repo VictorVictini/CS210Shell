@@ -105,10 +105,17 @@ int main()
                     break;
                 }
 
-                // replaces the backgroundInput with the relevant command from history based on recentInput, or returns an error -1
-                if (invoke_from_history(recentInput, backgroundInput, history, historyLen) == -1)
+                int errorCode = invoke_from_history(recentInput, backgroundInput, history, historyLen);
+                if (errorCode == -1)
                 {
                     printf("Error: invalid number provided\n");
+                    error = -1;
+                    break;
+                }
+
+                if (errorCode == -2)
+                {
+                    printf("Error: invalid format provided.\n");
                     error = -1;
                     break;
                 }

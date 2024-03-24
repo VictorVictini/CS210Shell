@@ -34,6 +34,8 @@ int invoke_from_history(char* input, char* command, char* history[], int len)
     int index = -1; // 1-indexed
     if (input[1] == '!') // !! gets the last history command
     {
+        if (input[2] != '\0')
+            return -2;
         index = len;
     }
     else // parse the number
