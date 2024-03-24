@@ -98,13 +98,6 @@ int main()
                 }
 
                 int errorCode = invoke_from_history(recentInput, backgroundInput, history, historyLen);
-                if (errorCode == -1)
-                {
-                    printf("Error: Invalid number provided. Usage: \"!N\", \"!-N\", or \"!!\" where N is between 1 and %d.\n", HISTORY_SIZE);
-                    error = -1;
-                    break;
-                }
-
                 if (errorCode == -2)
                 {
                     printf("Error: Invalid format provided. Usage: \"!N\", \"!-N\", or \"!!\" where N is between 1 and %d.\n", HISTORY_SIZE);
@@ -118,6 +111,14 @@ int main()
                     error = -1;
                     break;
                 }
+
+                if (errorCode == -1)
+                {
+                    printf("Error: Invalid number provided. Usage: \"!N\", \"!-N\", or \"!!\" where N is between 1 and %d.\n", HISTORY_SIZE);
+                    error = -1;
+                    break;
+                }
+
 
             // replacing relevant alias if it is one
             }
