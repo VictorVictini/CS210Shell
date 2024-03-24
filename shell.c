@@ -83,7 +83,7 @@ int main()
                 break;
 
             // adding it to the list so we can check if it is repeated later
-            ListNode* node = (ListNode*)malloc(sizeof(ListNode*));
+            ListNode* node = (ListNode*)malloc(sizeof(ListNode));
             strcpy(node->command, args[0]);
             add_node(node, &list);
 
