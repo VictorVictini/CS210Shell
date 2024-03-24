@@ -133,7 +133,8 @@ int main()
                     {
                         len++;
                     }
-                    sprintf(backgroundInput, "%s%s", aliasPairs[aliasIndex].command, &recentInput[len]);
+                    strcpy(backgroundInput, aliasPairs[aliasIndex].command);
+                    strcat(backgroundInput, &recentInput[len]);
                 }
                 else
                 {
@@ -303,6 +304,7 @@ int main()
         {
             execute_external_command(args);
         }
+        
     }
     
     //Save history (6)
