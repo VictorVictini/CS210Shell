@@ -61,8 +61,7 @@ int main()
         strcpy(recentInput, originInput);
 
         // parses input using copy
-        char* args[MAX_ARGS_QUANTITY];
-        memset(args, 0, MAX_ARGS_QUANTITY);
+        char* args[MAX_ARGS_QUANTITY] = {0}; // initialises all values to 0/equivalent
         int argsLen = parse_input(backgroundInput, args);
 
         // linked list to store all iterated commands, used to look for cycles
