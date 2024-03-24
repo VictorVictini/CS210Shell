@@ -13,7 +13,8 @@
 #define ALIASES_FILE_NAME ".aliases"
 
 // struct and type definition
-typedef struct {
+typedef struct
+{
     char alias[MAX_BUFFER_LENGTH];
     char command[MAX_BUFFER_LENGTH];
 } AliasPair;

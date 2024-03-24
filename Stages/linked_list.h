@@ -6,7 +6,8 @@
 #include <string.h>
 
 // types for linked list
-typedef struct Node {
+typedef struct Node
+{
     char command[MAX_BUFFER_LENGTH];
     struct Node* next;
 } ListNode;
