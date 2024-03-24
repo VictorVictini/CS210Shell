@@ -13,7 +13,7 @@ int main()
     //Set current working directory to user home directory (3)
     if (change_working_directory(homeDir) == -1)
     {
-        printf("Failed to change working directory.\n");
+        printf("Error: Failed to change working directory.\n");
         return 1;
     }
     
@@ -26,7 +26,7 @@ int main()
     int historyLen = load_history(homeDir, history);
     if (historyLen == -1)
     {
-        printf("Could not find %s at %s when trying to load history.\n", HIST_FILE_NAME, homeDir);
+        printf("Error: Failed to open the file \"%s\" at \"%s\" when trying to load history.\n", HIST_FILE_NAME, homeDir);
         historyLen = 0; // reset count
     }
     
@@ -34,11 +34,11 @@ int main()
     AliasPair aliasPairs[MAX_ALIASES];
     int aliasLen = read_alias_file(homeDir, aliasPairs);
     if (aliasLen == -1)
-        printf("Failed to open the file \"%s\" at \"%s\"\n", ALIASES_FILE_NAME, homeDir);
+        printf("Error: Failed to open the file \"%s\" at \"%s\" when trying to load alias.\n", ALIASES_FILE_NAME, homeDir);
     if (aliasLen == -2)
-        printf("Failed to parse a line in the file \"%s\" at \"%s\"\n", ALIASES_FILE_NAME, homeDir);
+        printf("Error: Failed to parse a line in the file \"%s\" at \"%s\".\n", ALIASES_FILE_NAME, homeDir);
     if (aliasLen == -3)
-        printf("Failed to add to the list of aliases. There are too many aliases. The limit is %d\n", MAX_ALIASES);
+        printf("Error: Failed to add to the list of aliases. There are too many aliases in the file. The limit is %d.\n", MAX_ALIASES);
     if (aliasLen < 0) // reset count
         aliasLen = 0;
     
@@ -75,7 +75,7 @@ int main()
             // the command has been repeated
             if (contains(args[0], list) == 0)
             {
-                printf("Could not run the command as a cycle had occured.\n");
+                printf("Error: Could not run the command as a cycle had occured.\n");
                 error = -1;
                 break;
             }
@@ -93,7 +93,7 @@ int main()
             {
                 if (argsLen != 1)
                 {
-                    printf("Error: history invocation should have no arguments.\n");
+                    printf("Error: History invocation should have no arguments.\n");
                     error = -1;
                     break;
                 }
@@ -108,14 +108,14 @@ int main()
                 int errorCode = invoke_from_history(recentInput, backgroundInput, history, historyLen);
                 if (errorCode == -1)
                 {
-                    printf("Error: invalid number provided\n");
+                    printf("Error: Invalid number provided.\n");
                     error = -1;
                     break;
                 }
 
                 if (errorCode == -2)
                 {
-                    printf("Error: invalid format provided.\n");
+                    printf("Error: Invalid format provided.\n");
                     error = -1;
                     break;
                 }
@@ -182,7 +182,7 @@ int main()
         {
             if (argsLen > 1)
             {
-                printf("getpath should have no arguments.\n");
+                printf("Error: \"getpath\" should have no arguments.\n");
             }
             else
             {
@@ -195,17 +195,17 @@ int main()
         {
             if (argsLen < 2)
             {
-                printf("No argument provided for setpath.\n");
+                printf("Error: No argument provided for \"setpath\".\n");
             }
             else if (argsLen > 2)
             {
-                printf("Too many arguments provided for setpath.\n");
+                printf("Error: Too many arguments provided for \"setpath\".\n");
             }
             else
             {
                 char* newPath = args[1];
                 change_path_env(newPath);
-                printf("New path changed to %s\n", newPath);
+                printf("New path changed to \"%s\".\n", newPath);
             }
         }
         else if (strcmp("cd", args[0]) == 0)
@@ -220,7 +220,7 @@ int main()
             }
             else
             {
-                printf("Too many arguments provided for cd\n");
+                printf("Error: Too many arguments provided for \"cd\".\n");
             }
         }
         else if (strcmp("history", args[0]) == 0)
@@ -231,7 +231,7 @@ int main()
             }
             else
             {
-                printf("history should have no arguments.\n");
+                printf("Error: \"history\" should have no arguments.\n");
             }
         }
         else if (strcmp("alias", args[0]) == 0)
@@ -242,7 +242,7 @@ int main()
             }
             else if (argsLen == 2)
             {
-                printf("Alias cannot accept only one argument.\n");
+                printf("Error: \"alias\" cannot accept only one argument.\n");
             }
             else
             {
@@ -254,53 +254,50 @@ int main()
                 char* aliasArgs[2];
                 if (parse_alias_line(&inputCopy[6], aliasArgs) != 0)
                 {
-                    printf("Could not parse command. Please separate the alias and command with a space.\n");
+                    printf("Error: Could not parse command. Please separate the alias and command with a space.\n");
+                    continue;
                 }
-                else
+
+                int tempLen = add_alias(aliasArgs[0], aliasArgs[1], aliasPairs, aliasLen);
+                if (tempLen == -1)
                 {
-                    int tempLen = add_alias(aliasArgs[0], aliasArgs[1], aliasPairs, aliasLen);
-                    if (tempLen == -1)
-                    {
-                        printf("Could not add alias \"%s\" to the list since there are too many aliases.\n", aliasArgs[0]);
-                    }
-                    else
-                    {
-                        aliasLen = tempLen;
-                        printf("Successfully added alias \"%s\" with command \"%s\"\n", aliasArgs[0], aliasArgs[1]);
-                    }
+                    printf("Error: Could not add alias \"%s\" to the list since there are too many aliases.\n", aliasArgs[0]);
+                    continue;
                 }
+                
+                aliasLen = tempLen;
+                printf("Successfully added alias \"%s\" with command \"%s\".\n", aliasArgs[0], aliasArgs[1]);
             }
         }
         else if (strcmp("unalias", args[0]) == 0)
         {
             if (argsLen != 2)
             {
-                printf("Unalias can only accept exactly one argument.\n");
+                printf("Error: \"unalias\" can only accept exactly one argument.\n");
             }
             else
             {
                 int tempLen = remove_alias(&recentInput[8], aliasPairs, aliasLen);
-                if (tempLen != -1)
+                if (tempLen == -1)
                 {
-                    aliasLen = tempLen;
-                    printf("Successfully removed alias \"%s\"\n", &recentInput[8]);
+                    printf("Error: Could not find provided alias \"%s\".\n", &recentInput[8]);
+                    continue;
                 }
-                else
-                {
-                    printf("Could not find provided alias \"%s\".\n", &recentInput[8]);
-                }
+
+                aliasLen = tempLen;
+                printf("Successfully removed alias \"%s\".\n", &recentInput[8]);
             }
         }
         else if (argsLen >= 2 && strcmp("clear", args[0]) == 0 && strcmp("history", args[1]) == 0)
         {
             if (argsLen > 2)
             {
-                printf("clear history does not accept arguments.\n");
+                printf("Error: \"clear history\" does not accept arguments.\n");
             }
             else
             {
                 historyLen = 0;
-                printf("Successfully cleared history\n");
+                printf("Successfully cleared history.\n");
             }
         }
         else 
@@ -311,7 +308,7 @@ int main()
     
     //Save history (6)
     if (save_history(homeDir, history, historyLen) == -1)
-        printf("Could not write to %s at %s when trying to save history.\n", HIST_FILE_NAME, homeDir);
+        printf("Error: Could not write to \"%s\" at \"%s\" when trying to save history.\n", HIST_FILE_NAME, homeDir);
 
     // freeing history
     for (int i = 0; i < HISTORY_SIZE; i++)
@@ -321,11 +318,10 @@ int main()
     
     //Save aliases (8)
     if (set_alias_file(homeDir, aliasPairs, aliasLen) == -1)
-        printf("Failed to add aliases to the file \"%s\" at \"%s\"\n", ALIASES_FILE_NAME, homeDir);
+        printf("Error: Failed to add aliases to the file \"%s\" at \"%s\".\n", ALIASES_FILE_NAME, homeDir);
     
     //Restore original path (3)
     change_path_env(savedPath);
-
     char restoredPath[MAX_PATH_LENGTH];
     get_path_env(restoredPath);
     printf("Path restored: %s\n", restoredPath);

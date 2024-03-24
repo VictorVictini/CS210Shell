@@ -2,7 +2,7 @@
 #define LINKED_LIST
 
 // imports
-#include "input_manipulation.h"
+#include "io_manager.h"
 #include <string.h>
 
 // types for linked list

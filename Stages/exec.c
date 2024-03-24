@@ -15,6 +15,6 @@ void execute_external_command(char* args[])
     }
     else
     {
-        printf("Failed to fork!\n");
+        printf("Error: Failed to fork!\n");
     }
 }

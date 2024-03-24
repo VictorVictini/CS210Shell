@@ -6,7 +6,7 @@
 #include "stdio.h"
 #include "string.h"
 #include "file_handling.h"
-#include "input_manipulation.h" // to get the constant
+#include "io_manager.h" // to get the constant
 
 // constants
 #define MAX_ALIASES 10

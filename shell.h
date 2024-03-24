@@ -4,5 +4,5 @@
 #include "Stages/exec.h"
 #include "Stages/file_handling.h"
 #include "Stages/history.h"
-#include "Stages/input_manipulation.h"
+#include "Stages/io_manager.h"
 #include "Stages/linked_list.h"
