@@ -138,7 +138,7 @@ int main()
                 }
                 else
                 {
-                    strcpy(backgroundInput, (aliasPairs + aliasIndex)->command);
+                    strcpy(backgroundInput, aliasPairs[aliasIndex].command);
                 }
             
             // normal command/rubbish so can end this
