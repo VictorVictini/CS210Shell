@@ -7,7 +7,7 @@ int change_working_directory(const char* path)
 
 void get_home_directory(char* home)
 {
-    strcpy(home, getenv("HOME"));
+    strncpy(home, getenv("HOME"), MAX_PATH_LENGTH - 1);
     home[MAX_PATH_LENGTH - 1] = '\0';
 }
 
@@ -18,6 +18,6 @@ int change_path_env(const char* path)
 
 void get_path_env(char* path)
 {
-    strcpy(path, getenv("PATH"));
+    strncpy(path, getenv("PATH"), MAX_PATH_LENGTH - 1);
     path[MAX_PATH_LENGTH - 1] = '\0';
 }
