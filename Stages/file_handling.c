@@ -22,7 +22,8 @@ int get_file(const char* fileLocation, char* result[], int maxLines)
 {
     // getting the file
     FILE* fptr = fopen(fileLocation, "r");
-    if (fptr == NULL) return -1;
+    if (fptr == NULL)
+        return -1;
 
     // reading from the file and writing its content to results
     char currLine[MAX_LINE_LENGTH];

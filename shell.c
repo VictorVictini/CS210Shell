@@ -146,7 +146,8 @@ int main()
         }
 
         // freeing list
-        while (list != NULL) {
+        while (list != NULL)
+        {
             ListNode* next = list->next;
             free(list);
             list = next;
@@ -250,7 +251,8 @@ int main()
                 else
                 {
                     int tempLen = add_alias(aliasArgs[0], aliasArgs[1], aliasPairs, aliasLen);
-                    if (tempLen == -1) {
+                    if (tempLen == -1)
+                    {
                         printf("Could not add alias \"%s\" to the list since there are too many aliases.\n", aliasArgs[0]);
                     }
                     else
@@ -304,7 +306,8 @@ int main()
         printf("Could not write to %s at %s when trying to save history.\n", HIST_FILE_NAME, homeDir);
 
     // freeing history
-    for (int i = 0; i < HISTORY_SIZE; i++) {
+    for (int i = 0; i < HISTORY_SIZE; i++)
+    {
         free(history[i]);
     }
     

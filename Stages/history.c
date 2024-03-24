@@ -74,6 +74,7 @@ int load_history(char* directory, char* history[])
 
 int is_history_invocation(char* command)
 {
-    if (*command == '!') return 0;
+    if (*command == '!')
+        return 0;
     return -1;
 }
