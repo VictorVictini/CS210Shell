@@ -92,7 +92,7 @@ int main()
             {
                 if (argsLen != 1)
                 {
-                    printf("Error: History invocation should have no arguments. The correct usages are: \"!N\", \"!-N\", or \"!!\" where N is between 1 and %d.\n", HISTORY_SIZE);
+                    printf("Error: History invocation should have no arguments. Usage: \"!N\", \"!-N\", or \"!!\" where N is between 1 and %d.\n", HISTORY_SIZE);
                     error = -1;
                     break;
                 }
@@ -100,14 +100,14 @@ int main()
                 int errorCode = invoke_from_history(recentInput, backgroundInput, history, historyLen);
                 if (errorCode == -1)
                 {
-                    printf("Error: Invalid number provided. The correct usages are: \"!N\", \"!-N\", or \"!!\" where N is between 1 and %d.\n", HISTORY_SIZE);
+                    printf("Error: Invalid number provided. Usage: \"!N\", \"!-N\", or \"!!\" where N is between 1 and %d.\n", HISTORY_SIZE);
                     error = -1;
                     break;
                 }
 
                 if (errorCode == -2)
                 {
-                    printf("Error: Invalid format provided. The correct usages are: \"!N\", \"!-N\", or \"!!\" where N is between 1 and %d.\n", HISTORY_SIZE);
+                    printf("Error: Invalid format provided. Usage: \"!N\", \"!-N\", or \"!!\" where N is between 1 and %d.\n", HISTORY_SIZE);
                     error = -1;
                     break;
                 }
@@ -182,7 +182,7 @@ int main()
         {
             if (argsLen > 1)
             {
-                printf("Error: \"getpath\" should have no arguments.\n");
+                printf("Error: \"getpath\" should have no arguments. Usage: \"getpath\".\n");
             }
             else
             {
@@ -195,11 +195,11 @@ int main()
         {
             if (argsLen < 2)
             {
-                printf("Error: No argument provided for \"setpath\".\n");
+                printf("Error: No argument provided for \"setpath\". Usage: \"setpath <path>\".\n");
             }
             else if (argsLen > 2)
             {
-                printf("Error: Too many arguments provided for \"setpath\".\n");
+                printf("Error: Too many arguments provided for \"setpath\". Usage: \"setpath <path>\".\n");
             }
             else
             {
@@ -213,16 +213,16 @@ int main()
             if (argsLen == 1)
             {
                 change_directory(homeDir);
-                printf("Successfully changed the directory to \"%s\"\n", homeDir);
+                printf("Successfully changed the directory to \"%s\".\n", homeDir);
             }
             else if(argsLen == 2)
             {
                 change_directory(args[1]);
-                printf("Successfully changed the directory to \"%s\"\n", args[1]);
+                printf("Successfully changed the directory to \"%s\".\n", args[1]);
             }
             else
             {
-                printf("Error: Too many arguments provided for \"cd\". Usage: \"cd <path>\"\n");
+                printf("Error: Too many arguments provided for \"cd\". Usage: \"cd <path>\".\n");
             }
         }
         else if (strcmp("history", args[0]) == 0)
@@ -233,7 +233,7 @@ int main()
             }
             else
             {
-                printf("Error: \"history\" should have no arguments.\n");
+                printf("Error: \"history\" should have no arguments. Usage: \"history\".\n");
             }
         }
         else if (strcmp("alias", args[0]) == 0)
@@ -244,7 +244,7 @@ int main()
             }
             else if (argsLen == 2)
             {
-                printf("Error: \"alias\" cannot accept only one argument.\n");
+                printf("Error: \"alias\" cannot accept only one argument. Usage: \"alias\" or \"alias <alias-name> <command>\".\n");
             }
             else
             {
@@ -256,14 +256,14 @@ int main()
                 char* aliasArgs[2];
                 if (parse_alias_line(&inputCopy[6], aliasArgs) != 0)
                 {
-                    printf("Error: Could not parse command. Please separate the alias and command with a space.\n");
+                    printf("Error: Could not parse command. Please separate the alias and command with a space. Usage: \"alias\" or \"alias <alias-name> <command>\".\n");
                     continue;
                 }
 
                 int tempLen = add_alias(aliasArgs[0], aliasArgs[1], aliasPairs, aliasLen);
                 if (tempLen == -1)
                 {
-                    printf("Error: Could not add alias \"%s\" to the list since there are too many aliases.\n", aliasArgs[0]);
+                    printf("Error: Could not add alias \"%s\" to the list since there are too many aliases currently existing. Please remove one via the \"unalias\" command if you would like to add it.\n", aliasArgs[0]);
                     continue;
                 }
                 
@@ -275,14 +275,14 @@ int main()
         {
             if (argsLen != 2)
             {
-                printf("Error: \"unalias\" can only accept exactly one argument.\n");
+                printf("Error: \"unalias\" can only accept exactly one argument. Usage: \"unalias <alias>\".\n");
             }
             else
             {
                 int tempLen = remove_alias(&recentInput[8], aliasPairs, aliasLen);
                 if (tempLen == -1)
                 {
-                    printf("Error: Could not find provided alias \"%s\".\n", &recentInput[8]);
+                    printf("Error: Could not find provided alias \"%s\". Please check you have used the correct alias via \"alias\".\n", &recentInput[8]);
                     continue;
                 }
 
@@ -294,7 +294,7 @@ int main()
         {
             if (argsLen > 2)
             {
-                printf("Error: \"clear history\" does not accept arguments.\n");
+                printf("Error: \"clear history\" does not accept arguments. Usage: \"clear history\".\n");
             }
             else
             {
