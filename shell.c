@@ -72,7 +72,7 @@ int main()
         while (1)
         {
             // the command has been repeated
-            if (contains(recentInput, list) == 0)
+            if (contains(args[0], list) == 0)
             {
                 printf("Could not run the command as a cycle had occured.\n");
                 error = -1;
@@ -84,7 +84,7 @@ int main()
 
             // adding it to the list so we can check if it is repeated later
             ListNode* node = (ListNode*)malloc(sizeof(ListNode*));
-            strcpy(node->command, recentInput);
+            strcpy(node->command, args[0]);
             add_node(node, &list);
 
             // making a history invocation if it is one
