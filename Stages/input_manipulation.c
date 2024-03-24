@@ -5,10 +5,10 @@ void display_prompt()
     printf("This is the greatest and best shell in the world >>>>> ");
 }
 
-int retrieve_input(char* str, int maxLen)
+int retrieve_input(char* str)
 {
     // retrieving input
-    if (fgets(str, maxLen, stdin) == NULL)
+    if (fgets(str, MAX_BUFFER_LENGTH, stdin) == NULL)
         return -1;
 
     // if the string doesn't contain \n or NULL

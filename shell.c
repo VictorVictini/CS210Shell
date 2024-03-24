@@ -51,7 +51,7 @@ int main()
         //Read and parse user originInput (1)
         // reads input
         char originInput[MAX_BUFFER_LENGTH];
-        if (retrieve_input(originInput, MAX_BUFFER_LENGTH) == -1)
+        if (retrieve_input(originInput) == -1)
             break;
 
         // creates a copy for manipulation elsewhere
