@@ -2,11 +2,12 @@
 #define LINKED_LIST
 
 // imports
+#include "input_manipulation.h"
 #include <string.h>
 
 // types for linked list
 typedef struct Node {
-    char* command;
+    char command[MAX_BUFFER_LENGTH];
     struct Node* next;
 } ListNode;
 

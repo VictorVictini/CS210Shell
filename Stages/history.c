@@ -38,11 +38,9 @@ int invoke_from_history(char* input, char* command, char* history[], int len)
     }
     else // parse the number
     {
-        sscanf(&input[1], "%d", &index);
+        sscanf(input, "!%d", &index);
         if (index < 0) // if it is negative, assume it is !-N so add the length to get a normal history execution
-        {
             index += len + 1;
-        }
     }
 
     // out of range errors
@@ -57,7 +55,7 @@ int invoke_from_history(char* input, char* command, char* history[], int len)
 int save_history(char* directory, char* history[], int len)
 {
     // concat file name to directory
-    char fileLoc[2048];
+    char fileLoc[MAX_FILE_LOCATION_LENGTH];
     sprintf(fileLoc, "%s/%s", directory, HIST_FILE_NAME);
 
     // saves history to file
@@ -67,7 +65,7 @@ int save_history(char* directory, char* history[], int len)
 int load_history(char* directory, char* history[])
 {
     // concat file name to directory
-    char fileLoc[2048];
+    char fileLoc[MAX_FILE_LOCATION_LENGTH];
     sprintf(fileLoc, "%s/%s", directory, HIST_FILE_NAME);
 
     // loads into history variable from file

@@ -8,6 +8,7 @@
 
 // constants
 #define MAX_LINE_LENGTH 513
+#define MAX_FILE_LOCATION_LENGTH 2048
 
 /*
     Assigns/re-assigns values to a given file
