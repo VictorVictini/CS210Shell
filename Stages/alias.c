@@ -81,7 +81,7 @@ int parse_alias_line(char* str, char** args)
         return -1;
 
     // finding the 2nd arg i.e. the first non-token char after the given token
-    char* secArg = firstToken + 1;
+    char* secArg = &firstToken[1];
     while (secArg[0] != '\0' && strchr(TOKENS, secArg[0]) != NULL)
     {
         secArg++;
