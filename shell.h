@@ -3,7 +3,6 @@
 
 // imports
 #include "Stages/alias.h"
-#include "Stages/changing_dir.h"
 #include "Stages/directory_path_manipulation.h"
 #include "Stages/exec.h"
 #include "Stages/file_handling.h"
