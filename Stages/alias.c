@@ -62,7 +62,7 @@ void print_alias(AliasPair* aliasPairs, int len)
     }
 }
 
-int parse_alias_line(char* str, char** args)
+int parse_alias_line(char* str, char* args[])
 {
     // ensuring first argument is not a token
     for (int i = 0; TOKENS[i] != '\0'; i++)

@@ -61,7 +61,7 @@ void print_alias(AliasPair* aliasPairs, int len);
     side effects: changes functionality reliant on the string or args passed, will break if args isn't allocated to accept 3 of the expected arguments
     written by Danyal
 */
-int parse_alias_line(char* str, char** args);
+int parse_alias_line(char* str, char* args[]);
 
 /*
     Retrieves aliasPairs data from the file
@@ -79,6 +79,6 @@ int read_alias_file(const char* fileDirectory, AliasPair* aliasPairs);
     side effects: n/a
     written by Danyal
 */
-int set_alias_file(const char* fileLocation, AliasPair* aliasPairs, int len);
+int set_alias_file(const char* fileDirectory, AliasPair* aliasPairs, int len);
 
 #endif
