@@ -1,148 +1,97 @@
 #include "history.h"
 
-// Global variables
-HistoryEntry history[HISTORY_SIZE];
-int history_count = 0; // Number of commands saved in history
-
-// Function to add a command to history
-void add_to_history(char* command) {
-    // If the history array is full, shift elements
-    if (history_count == HISTORY_SIZE) {
-        for (int i = 0; i < HISTORY_SIZE - 1; i++) {
-            history[i] = history[i + 1];
-            history[i].number = i + 1; // Reset the number after shifting
+int add_to_history(char* command, char* history[], int len)
+{
+    // if the history array is full, shift elements then add it
+    if (len == HISTORY_SIZE)
+    {
+        for (int i = 1; i < len; i++)
+        {
+            strcpy(history[i - 1], history[i]);
         }
-    } else {
-        history_count++; // Increment only if there is space in the array
+        strcpy(history[len - 1], command);
+        return len;
     }
 
-    // Create a new history entry
-    HistoryEntry entry;
-    entry.number = history_count;
-    strncpy(entry.command, command, sizeof(entry.command) - 1);
-    entry.command[sizeof(entry.command) - 1] = '\0';
-
-    // Add the new entry to the history
-    history[history_count - 1] = entry;
+    // add normally
+    strcpy(history[len], command);
+    return len + 1;
 }
 
 // Function to print the history
-void print_history() {
-    for (int i = 0; i < history_count; i++) {
-        printf("%d %s\n", history[i].number, history[i].command);
+void print_history(char* history[], int len)
+{
+    for (int i = 0; i < len; i++)
+    {
+        printf("%d %s\n", i + 1, history[i]);
     }
 }
 
 // Function to invoke a command from history
-int invoke_from_history(char* input, char* command, char** result) {
-    if (strcmp(command, "!!") == 0) {
-        // Execute the latest command entered in history
-        if (history_count > 0) {
-            *result = strdup(history[history_count - 1].command);
-            return 0;
-        } else {
-            printf("Error: History is empty.\n");
-            return -1;
-        }
-    } else if (command[0] == '!' && isdigit(command[1])) {
-        // Extract the command number from the input
-        int history_number = atoi(command + 1);
-
-        // Check if the specified history number is valid
-        if (history_number >= 1 && history_number <= history_count) {
-            *result = strdup(history[history_number - 1].command);
-            return 0;
-        } else {
-            printf("Error: Invalid history number.\n");
-            return -1;
-        }
-    } else if (strncmp(command, "!-", 2) == 0 && isdigit(command[2])) {
-        // Extract the number from the input
-        int offset = atoi(command + 2);
-
-        // Calculate the history number to invoke
-        int target_number = history_count - offset;
-
-        // Check if the calculated history number is valid
-        if (offset >= 1 && target_number >= 0 && target_number <= history_count) {
-            *result = strdup(history[target_number].command);
-            return 0;
-        } else {
-            printf("Error: Invalid history number.\n");
-            return -1;
-        }
-        return 1;
-    }
-}
-
-int save_history(char* directory)
+int invoke_from_history(char* input, char* command, char* history[], int len)
 {
-    // turning into string array
-    char** historyStrings = (char**)malloc(HISTORY_SIZE * sizeof(char*));
-    for (int i = 0; i < history_count; i++)
+    // finds the index with respect to the command
+    int index = -1; // 1-indexed
+    if (input[1] == '!') // !! gets the last history command
     {
-        historyStrings[i] = (char*)malloc(MAX_LINE_LENGTH * sizeof(char));
-        sprintf(historyStrings[i], "%d %s", history[i].number, history[i].command);
+        if (input[2] != '\0')
+            return -2;
+        index = len;
+    }
+    else // parse the number
+    {
+        // validates the format of !N or !-N where N is a positive whole number
+        int chrIndex = 1;
+        if (input[chrIndex] == '-')
+            chrIndex++;
+        while (input[chrIndex] != '\0')
+        {
+            if (input[chrIndex] < '0' || input[chrIndex] > '9')
+                return -2;
+            chrIndex++;
+        }
+
+        // parses it with further format/issue checks
+        int format = sscanf(input, "!%d", &index);
+        if (format == EOF || format != 1)
+            return -2;
+
+        if (index < 0) // if it is negative, assume it is !-N so add the length to get a normal history execution
+            index += len + 1;
     }
 
-    // saving file
-    char fileLoc[2048];
-    sprintf(fileLoc, "%s/%s", directory, HIST_FILE_NAME);
-    int res = set_file(fileLoc, historyStrings, history_count);
+    // out of range errors
+    if (index < 1 || index > len)
+        return -1;
 
-    // freeing
-    for (int i = 0; i < history_count; i++) free(historyStrings[i]);
-    free(historyStrings);
-
-    return res;
+    // add the relevant command from history to the provided string
+    strcpy(command, history[index - 1]);
+    return 0;
 }
 
-int load_history(char* directory) {
-    // reset history count to 0 to prevent glitches in memory array
-    history_count = 0;
-
+int save_history(char* directory, char* history[], int len)
+{
     // concat file name to directory
-    char fileLoc[2048];
+    char fileLoc[MAX_FILE_LOCATION_LENGTH];
     sprintf(fileLoc, "%s/%s", directory, HIST_FILE_NAME);
 
-    // turning into string array
-    char** historyStrings = (char**)calloc(HISTORY_SIZE, sizeof(char*));
-    for (int i = 0; i < HISTORY_SIZE; i++) {
-        historyStrings[i] = (char*)calloc(MAX_LINE_LENGTH, sizeof(char));
-    }
-    int res = get_file(fileLoc, historyStrings, HISTORY_SIZE);
-
-    // loading it into the history array
-    for (int i = 0; i < HISTORY_SIZE; i++) {
-        if (strlen(historyStrings[i]) == 0) continue;
-        sscanf(historyStrings[i], "%d %[^\n]", &history[i].number, history[i].command);
-        history_count++;
-    }
-
-    // freeing
-    for (int i = 0; i < HISTORY_SIZE; i++) free(historyStrings[i]);
-    free(historyStrings);
-
-    return res;
+    // saves history to file
+    return set_file(fileLoc, history, len);
 }
 
-int clear_history(char* directory) {
-    // reset history count
-    history_count = 0;
-
-    // clear history array
-    for (int i = 0; i < HISTORY_SIZE; i++) {
-        history[i].number = 0;
-        memset(history[i].command, 0, MAX_LINE_LENGTH);
-    }
-
-    // wipe history file
-    char fileLoc[2048];
+int load_history(char* directory, char* history[])
+{
+    // concat file name to directory
+    char fileLoc[MAX_FILE_LOCATION_LENGTH];
     sprintf(fileLoc, "%s/%s", directory, HIST_FILE_NAME);
-    return set_file(fileLoc, NULL, 0);
+
+    // loads into history variable from file
+    return get_file(fileLoc, history, HISTORY_SIZE);
 }
 
-int is_history_invocation(char* command) {
-    if (*command == '!') return 0;
+int is_history_invocation(char* command)
+{
+    if (*command == '!')
+        return 0;
     return -1;
 }

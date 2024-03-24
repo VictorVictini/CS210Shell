@@ -2,11 +2,13 @@
 #define LINKED_LIST
 
 // imports
+#include "io_manager.h"
 #include <string.h>
 
 // types for linked list
-typedef struct Node {
-    char* command;
+typedef struct Node
+{
+    char command[MAX_BUFFER_LENGTH];
     struct Node* next;
 } ListNode;
 

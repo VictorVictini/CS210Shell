@@ -1,10 +1,13 @@
-#include "Stages/stage_1.h"
-#include "Stages/stage_2.h"
-#include "Stages/stage_3.h"
-#include "Stages/stage_4.h"
-#include "Stages/history.h"
-#include "Stages/stage_7.h"
-#include "Stages/stage_8.h"
-#include "Stages/linked_list.h"
-#include "Stages/file_handling.h"
+#ifndef SHELL
+#define SHELL
+
+// imports
 #include "Stages/alias.h"
+#include "Stages/directory_path_manipulation.h"
+#include "Stages/exec.h"
+#include "Stages/file_handling.h"
+#include "Stages/history.h"
+#include "Stages/io_manager.h"
+#include "Stages/linked_list.h"
+
+#endif
