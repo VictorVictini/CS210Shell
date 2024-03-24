@@ -92,14 +92,7 @@ int main()
             {
                 if (argsLen != 1)
                 {
-                    printf("Error: History invocation should have no arguments.\n");
-                    error = -1;
-                    break;
-                }
-
-                if (historyLen == 0)
-                {
-                    printf("Error: History is empty.\n");
+                    printf("Error: History invocation should have no arguments. The correct usages are: \"!N\", \"!-N\", or \"!!\" where N is between 1 and %d.\n", HISTORY_SIZE);
                     error = -1;
                     break;
                 }
@@ -107,14 +100,21 @@ int main()
                 int errorCode = invoke_from_history(recentInput, backgroundInput, history, historyLen);
                 if (errorCode == -1)
                 {
-                    printf("Error: Invalid number provided.\n");
+                    printf("Error: Invalid number provided. The correct usages are: \"!N\", \"!-N\", or \"!!\" where N is between 1 and %d.\n", HISTORY_SIZE);
                     error = -1;
                     break;
                 }
 
                 if (errorCode == -2)
                 {
-                    printf("Error: Invalid format provided.\n");
+                    printf("Error: Invalid format provided. The correct usages are: \"!N\", \"!-N\", or \"!!\" where N is between 1 and %d.\n", HISTORY_SIZE);
+                    error = -1;
+                    break;
+                }
+
+                if (historyLen == 0)
+                {
+                    printf("Error: History is empty. Populate history by enterring non-history invocation commands.\n");
                     error = -1;
                     break;
                 }
