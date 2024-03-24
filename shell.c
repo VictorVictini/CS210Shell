@@ -213,10 +213,12 @@ int main()
             if (argsLen == 1)
             {
                 change_directory(homeDir);
+                printf("Successfully changed the directory to \"%s\"\n", homeDir);
             }
             else if(argsLen == 2)
             {
                 change_directory(args[1]);
+                printf("Successfully changed the directory to \"%s\"\n", args[1]);
             }
             else
             {
@@ -306,6 +308,9 @@ int main()
         }
         
     }
+
+    // when exiting, adds a new line so the next few outputs aren't weird
+    printf("\n");
     
     //Save history (6)
     if (save_history(homeDir, history, historyLen) == -1)
