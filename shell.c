@@ -69,7 +69,7 @@ int main()
 
         // loop until an error occurs, the max iterations occur, or it naturally ends
         int error = 0;
-        while (1)
+        while (argsLen >= 1)
         {
             // the command has been repeated
             if (contains(args[0], list) == 0)
@@ -78,9 +78,6 @@ int main()
                 error = -1;
                 break;
             }
-
-            if (argsLen <= 0)
-                break;
 
             // adding it to the list so we can check if it is repeated later
             ListNode* node = (ListNode*)malloc(sizeof(ListNode));
