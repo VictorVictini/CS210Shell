@@ -72,7 +72,8 @@ int load_history(char* directory, char* history[])
     return get_file(fileLoc, history, HISTORY_SIZE);
 }
 
-int is_history_invocation(char* command) {
+int is_history_invocation(char* command)
+{
     if (*command == '!') return 0;
     return -1;
 }
