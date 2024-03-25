@@ -28,4 +28,13 @@ int set_file(const char* fileLocation, char** data, const int len);
 */
 int get_file(const char* fileLocation, char** result, int maxLines);
 
+/*
+    Counts the number of lines in a given file and returns it
+    inputs: file location
+    outputs: returns -1 if something went wrong, otherwise the number of lines in the provided file
+    side effects: n/a
+    written by Danyal
+*/
+int count_file_lines(const char* fileLocation);
+
 #endif

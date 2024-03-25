@@ -41,3 +41,21 @@ int get_file(const char* fileLocation, char* result[], int maxLines)
     fclose(fptr);
     return len;
 }
+
+int count_file_lines(const char* fileLocation)
+{
+    // getting the file
+    FILE* fptr = fopen(fileLocation, "r");
+    if (fptr == NULL)
+        return -1;
+    
+    // counting each line
+    int count = 0;
+    char buffer[MAX_LINE_LENGTH];
+    while (fgets(buffer, MAX_LINE_LENGTH, fptr) != NULL)
+    {
+        count++;
+    }
+    
+    return count;
+}
