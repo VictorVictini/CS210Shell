@@ -49,10 +49,10 @@ void get_path_env(char* path);
 /*
     Changes the directory to the provided one
     inputs: the directory to change to
-    outputs: n/a
+    outputs: -1 if something went wrong, otherwise 0
     side effects: functionality dependant on the current working directory will be changed
     written by Lex Atkinson
 */
-void change_directory(char* dir);
+int change_directory(char* dir);
 
 #endif

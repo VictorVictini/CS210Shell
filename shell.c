@@ -217,11 +217,13 @@ int main()
         {
             if (argsLen == 1)
             {
-                change_directory(homeDir);
+                if (change_directory(homeDir) == 0)
+                    printf("Successfully changed the directory to \"%s\".\n", homeDir);
             }
             else if(argsLen == 2)
             {
-                change_directory(args[1]);
+                if (change_directory(args[1]) == 0)
+                    printf("Successfully changed the directory to \"%s\".\n", args[1]);
             }
             else
             {

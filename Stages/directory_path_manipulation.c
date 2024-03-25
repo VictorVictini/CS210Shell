@@ -22,10 +22,12 @@ void get_path_env(char* path)
     path[MAX_PATH_LENGTH - 1] = '\0';
 }
 
-void change_directory(char* dir)
+int change_directory(char* dir)
 {
     if(chdir(dir) != 0)
+    {
         perror(dir);
-    else
-        printf("Successfully changed the directory to \"%s\".\n", dir);
+        return -1;
+    }
+    return 0;
 }
