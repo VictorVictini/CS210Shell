@@ -103,32 +103,39 @@ int read_alias_file(const char* fileDirectory, AliasPair* aliasPairs)
     char fileLocation[MAX_FILE_LOCATION_LENGTH];
     sprintf(fileLocation, "%s/%s", fileDirectory, ALIASES_FILE_NAME);
 
+    // counts the number of lines in the file
+    int count = count_file_lines(fileLocation);
+    if (count == -1)
+        return -1;
+
     // reading from file
-    char* fileData[MAX_ALIASES];
-    for (int i = 0; i < MAX_ALIASES; i++)
+    char* fileData[count];
+    for (int i = 0; i < count; i++)
     {
         fileData[i] = (char*)malloc(sizeof(char) * MAX_BUFFER_LENGTH);
     }
-    int aliasLen = get_file(fileLocation, fileData, MAX_ALIASES);
-    if (aliasLen == -1)
+    int fileLen = get_file(fileLocation, fileData, count);
+    if (fileLen == -1)
         return -1;
 
     // parsing and assigning for the relevant aliases
     char* args[2];
-    for (int i = 0; i < aliasLen; i++)
+    int len = 0;
+    for (int i = 0; i < fileLen; i++)
     {
         if (parse_alias_line(fileData[i], args) == -1)
             return -2;
-        if (add_alias(args[0], args[1], aliasPairs, i) == -1)
+        len = add_alias(args[0], args[1], aliasPairs, len);
+        if (len == -1)
             return -3;
     }
 
     // freeing stuff
-    for (int i = 0; i < MAX_ALIASES; i++)
+    for (int i = 0; i < count; i++)
     {
         free(fileData[i]);
     }
-    return aliasLen;
+    return len;
 }
 
 int set_alias_file(const char* fileDirectory, AliasPair* aliasPairs, int len)

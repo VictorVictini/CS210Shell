@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "io_manager.h"
 #include "file_handling.h"
 
 // constants
@@ -50,7 +51,7 @@ int save_history(char* directory, char* history[], int len);
 /*
     Loads the history into the provided history parameter
     inputs: the directory to retrieve the file from, history to load in
-    outputs: -1 if something went wrong, otherwise the history length
+    outputs: -1 if something went wrong with retrieving the file, -2 if too many lines appeared in the file, otherwise the history length
     side effects: functionality dependant on history may be changed
     written by Mohamed, Danyal
 */

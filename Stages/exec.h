@@ -10,10 +10,10 @@
 /*
     Executes an external command
     inputs: the arguments to execute
-    outputs: n/a
+    outputs: -1 if something went wrong, otherwise 0
     side effects: n/a
     written by Nathan
 */
-void execute_external_command(char* args[]);
+int execute_external_command(char* args[]);
 
 #endif

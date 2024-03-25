@@ -25,9 +25,13 @@ int main()
     }
     int historyLen = load_history(homeDir, history);
     if (historyLen == -1)
-    {
         printf("Error: Failed to open the file \"%s\" at \"%s\" when trying to load history.\n", HIST_FILE_NAME, homeDir);
-        historyLen = 0; // reset count
+    if (historyLen == -2)
+        printf("Error: Too many lines appeared in the file \"%s\" at \"%s\". Could not add to history. The limit is %d.\n", HIST_FILE_NAME, homeDir, HISTORY_SIZE);
+    if (historyLen < 0)
+    {
+        printf("Clearing history.\n");
+        historyLen = 0;
     }
     
     //Load aliases (8)
@@ -39,9 +43,12 @@ int main()
         printf("Error: Failed to parse a line in the file \"%s\" at \"%s\".\n", ALIASES_FILE_NAME, homeDir);
     if (aliasLen == -3)
         printf("Error: Failed to add to the list of aliases. There are too many aliases in the file. The limit is %d.\n", MAX_ALIASES);
-    if (aliasLen < 0) // reset count
+    if (aliasLen < 0)
+    {
+        printf("Clearing alias.\n");
         aliasLen = 0;
-    
+    }
+
     //Do while shell has not terminated
     while(1)
     {
@@ -210,13 +217,13 @@ int main()
         {
             if (argsLen == 1)
             {
-                change_directory(homeDir);
-                printf("Successfully changed the directory to \"%s\".\n", homeDir);
+                if (change_directory(homeDir) == 0)
+                    printf("Successfully changed the directory to \"%s\".\n", homeDir);
             }
             else if(argsLen == 2)
             {
-                change_directory(args[1]);
-                printf("Successfully changed the directory to \"%s\".\n", args[1]);
+                if (change_directory(args[1]) == 0)
+                    printf("Successfully changed the directory to \"%s\".\n", args[1]);
             }
             else
             {
@@ -300,9 +307,9 @@ int main()
                 printf("Successfully cleared history.\n");
             }
         }
-        else 
+        else if (execute_external_command(args) == -1)
         {
-            execute_external_command(args);
+            printf("Error: Failed to fork!\n");
         }
         
     }

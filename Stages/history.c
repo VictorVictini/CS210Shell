@@ -85,7 +85,11 @@ int load_history(char* directory, char* history[])
     char fileLoc[MAX_FILE_LOCATION_LENGTH];
     sprintf(fileLoc, "%s/%s", directory, HIST_FILE_NAME);
 
-    // loads into history variable from file
+    // if there are too many lines
+    if (count_file_lines(fileLoc) > HISTORY_SIZE)
+        return -2;
+
+    // loads into buffer from file
     return get_file(fileLoc, history, HISTORY_SIZE);
 }
 
