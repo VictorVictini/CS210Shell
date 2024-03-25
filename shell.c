@@ -30,7 +30,7 @@ int main()
         printf("Error: Too many lines appeared in the file \"%s\" at \"%s\". Could not add to history. The limit is %d.\n", HIST_FILE_NAME, homeDir, HISTORY_SIZE);
     if (historyLen < 0)
     {
-        printf("Clearing history.\n");
+        printf("Creating new history.\n");
         historyLen = 0;
     }
     
@@ -45,7 +45,7 @@ int main()
         printf("Error: Failed to add to the list of aliases. There are too many aliases in the file. The limit is %d.\n", MAX_ALIASES);
     if (aliasLen < 0)
     {
-        printf("Clearing alias.\n");
+        printf("Creating new alias.\n");
         aliasLen = 0;
     }
 
