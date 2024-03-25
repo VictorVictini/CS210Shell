@@ -26,4 +26,6 @@ void change_directory(char* dir)
 {
     if(chdir(dir) != 0)
         perror(dir);
+    else
+        printf("Successfully changed the directory to \"%s\".\n", dir);
 }
