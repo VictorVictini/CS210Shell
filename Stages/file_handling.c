@@ -30,9 +30,19 @@ int get_file(const char* fileLocation, char* result[], int maxLines)
     int len = 0;
     while (len < maxLines && fgets(currLine, MAX_LINE_LENGTH, fptr) != NULL)
     {
+        if (strlen(currLine) == MAX_LINE_LENGTH - 1 && currLine[MAX_LINE_LENGTH - 2] != '\n') // ignore all remaining chars on this line since we reached the 'MAX_LINE_LENGTH'
+        {
+            char chr = fgetc(fptr);
+            while (chr != '\n' && chr != EOF)
+            {
+                chr = fgetc(fptr);
+            }
+        }
+
         int index = strcspn(currLine, "\n");
         if (currLine[index] == '\n')
             currLine[index] = '\0';
+
         strcpy(result[len], currLine);
         len++;
     }
