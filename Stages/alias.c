@@ -104,17 +104,17 @@ int read_alias_file(const char* fileDirectory, AliasPair* aliasPairs)
     sprintf(fileLocation, "%s/%s", fileDirectory, ALIASES_FILE_NAME);
 
     // counts the number of lines in the file
-    int fileLen = count_file_lines(fileLocation);
-    if (fileLen == -1)
+    int count = count_file_lines(fileLocation);
+    if (count == -1)
         return -1;
 
     // reading from file
-    char* fileData[fileLen];
-    for (int i = 0; i < fileLen; i++)
+    char* fileData[count];
+    for (int i = 0; i < count; i++)
     {
         fileData[i] = (char*)malloc(sizeof(char) * MAX_BUFFER_LENGTH);
     }
-    fileLen = get_file(fileLocation, fileData, fileLen);
+    int fileLen = get_file(fileLocation, fileData, count);
     if (fileLen == -1)
         return -1;
 
@@ -131,7 +131,7 @@ int read_alias_file(const char* fileDirectory, AliasPair* aliasPairs)
     }
 
     // freeing stuff
-    for (int i = 0; i < fileLen; i++)
+    for (int i = 0; i < count; i++)
     {
         free(fileData[i]);
     }
