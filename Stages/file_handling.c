@@ -30,7 +30,8 @@ int get_file(const char* fileLocation, char* result[], int maxLines)
     int len = 0;
     while (len < maxLines && fgets(currLine, MAX_LINE_LENGTH, fptr) != NULL)
     {
-        if (strlen(currLine) == MAX_LINE_LENGTH - 1 && currLine[MAX_LINE_LENGTH - 2] != '\n') // ignore all remaining chars on this line since we reached the 'MAX_LINE_LENGTH'
+        // ignore all remaining chars on this line since we reached the 'MAX_LINE_LENGTH'
+        if (strlen(currLine) == MAX_LINE_LENGTH - 1 && currLine[MAX_LINE_LENGTH - 2] != '\n')
         {
             char chr = fgetc(fptr);
             while (chr != '\n' && chr != EOF)
@@ -39,10 +40,12 @@ int get_file(const char* fileLocation, char* result[], int maxLines)
             }
         }
 
+        // replaces a new line if needed
         int index = strcspn(currLine, "\n");
         if (currLine[index] == '\n')
             currLine[index] = '\0';
 
+        // adds to the array and increments length 
         strcpy(result[len], currLine);
         len++;
     }
@@ -64,6 +67,17 @@ int count_file_lines(const char* fileLocation)
     char buffer[MAX_LINE_LENGTH];
     while (fgets(buffer, MAX_LINE_LENGTH, fptr) != NULL)
     {
+        // ignore all remaining chars on this line since we reached the 'MAX_LINE_LENGTH'
+        if (strlen(buffer) == MAX_LINE_LENGTH - 1 && buffer[MAX_LINE_LENGTH - 2] != '\n')
+        {
+            char chr = fgetc(fptr);
+            while (chr != '\n' && chr != EOF)
+            {
+                chr = fgetc(fptr);
+            }
+        }
+
+        // increment counter
         count++;
     }
     

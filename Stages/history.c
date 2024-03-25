@@ -87,7 +87,7 @@ int load_history(char* directory, char* history[])
 
     // if there are too many lines
     if (count_file_lines(fileLoc) > HISTORY_SIZE)
-        return -1;
+        return -2;
 
     // loads into buffer from file
     return get_file(fileLoc, history, HISTORY_SIZE);
