@@ -105,6 +105,8 @@ int read_alias_file(const char* fileDirectory, AliasPair* aliasPairs)
 
     // counts the number of lines in the file
     int fileLen = count_file_lines(fileLocation);
+    if (fileLen == -1)
+        return -1;
 
     // reading from file
     char* fileData[fileLen];
@@ -123,13 +125,13 @@ int read_alias_file(const char* fileDirectory, AliasPair* aliasPairs)
     {
         if (parse_alias_line(fileData[i], args) == -1)
             return -2;
-        len = add_alias(args[0], args[1], aliasPairs, i);
+        len = add_alias(args[0], args[1], aliasPairs, len);
         if (len == -1)
             return -3;
     }
 
     // freeing stuff
-    for (int i = 0; i < MAX_ALIASES; i++)
+    for (int i = 0; i < fileLen; i++)
     {
         free(fileData[i]);
     }
