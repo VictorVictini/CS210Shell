@@ -25,9 +25,13 @@ int main()
     }
     int historyLen = load_history(homeDir, history);
     if (historyLen == -1)
-    {
         printf("Error: Failed to open the file \"%s\" at \"%s\" when trying to load history.\n", HIST_FILE_NAME, homeDir);
-        historyLen = 0; // reset count
+    if (historyLen == -2)
+        printf("Error: Too many lines appeared in the file \"%s\" at \"%s\". Could not add to history. The limit is %d.\n", HIST_FILE_NAME, homeDir, HISTORY_SIZE);
+    if (historyLen < 0)
+    {
+        printf("Clearing history.\n");
+        historyLen = 0;
     }
     
     //Load aliases (8)
@@ -39,9 +43,12 @@ int main()
         printf("Error: Failed to parse a line in the file \"%s\" at \"%s\".\n", ALIASES_FILE_NAME, homeDir);
     if (aliasLen == -3)
         printf("Error: Failed to add to the list of aliases. There are too many aliases in the file. The limit is %d.\n", MAX_ALIASES);
-    if (aliasLen < 0) // reset count
+    if (aliasLen < 0)
+    {
+        printf("Clearing alias.\n");
         aliasLen = 0;
-    
+    }
+
     //Do while shell has not terminated
     while(1)
     {
