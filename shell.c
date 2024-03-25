@@ -307,9 +307,9 @@ int main()
                 printf("Successfully cleared history.\n");
             }
         }
-        else 
+        else if (execute_external_command(args) == -1)
         {
-            execute_external_command(args);
+            printf("Error: Failed to fork!\n");
         }
         
     }
