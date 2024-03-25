@@ -85,35 +85,12 @@ int load_history(char* directory, char* history[])
     char fileLoc[MAX_FILE_LOCATION_LENGTH];
     sprintf(fileLoc, "%s/%s", directory, HIST_FILE_NAME);
 
-    // loads into buffer from file
-    char* buffer[HISTORY_SIZE + 1];
-    for (int i = 0; i <= HISTORY_SIZE; i++)
-    {
-        buffer[i] = (char*)malloc(sizeof(char) * MAX_BUFFER_LENGTH);
-    }
-    int len = get_file(fileLoc, buffer, HISTORY_SIZE + 1);
-    
     // if there are too many lines
-    if (len > HISTORY_SIZE)
-        return -2;
-
-    // if the file failed to load
-    if (len == -1)
+    if (count_file_lines(fileLoc) > HISTORY_SIZE)
         return -1;
 
-    // writes buffer to history
-    for (int i = 0; i < len; i++)
-    {
-        strcpy(history[i], buffer[i]);
-    }
-
-    // free()-ing buffer
-    for (int i = 0; i <= HISTORY_SIZE; i++)
-    {
-        free(buffer[i]);
-    }
-
-    return len;
+    // loads into buffer from file
+    return get_file(fileLoc, history, HISTORY_SIZE);
 }
 
 int is_history_invocation(char* command)
