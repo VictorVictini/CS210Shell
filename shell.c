@@ -28,6 +28,8 @@ int main()
         printf("Error: Failed to open the file \"%s\" at \"%s\" when trying to load history.\n", HIST_FILE_NAME, homeDir);
     if (historyLen == -2)
         printf("Error: Too many lines appeared in the file \"%s\" at \"%s\". Could not add to history. The limit is %d.\n", HIST_FILE_NAME, homeDir, HISTORY_SIZE);
+    if (historyLen == -3)
+        printf("Error: Failed to parse a line in the file \"%s\" at \"%s\".\n", HIST_FILE_NAME, homeDir);
     if (historyLen < 0)
     {
         printf("Creating new history list.\n");

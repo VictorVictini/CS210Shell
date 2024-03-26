@@ -89,8 +89,28 @@ int load_history(char* directory, char* history[])
     if (count_file_lines(fileLoc) > HISTORY_SIZE)
         return -2;
 
-    // loads into buffer from file
-    return get_file(fileLoc, history, HISTORY_SIZE);
+    // loads the file into history
+    int len = get_file(fileLoc, history, HISTORY_SIZE);
+    if (len == -1)
+        return -1;
+
+    // if the file is invalid i.e. it does not contain a non-TOKEN character or it is a history invocation
+    for (int i = 0; i < len; i++)
+    {
+        if (is_history_invocation(history[i]) == 0)
+            return -3;
+        
+        // loops until it finds a non-token character
+        int chrIndex = 0;
+        while (history[i][chrIndex] != '\0' && strchr(TOKENS, history[i][chrIndex]) != NULL)
+        {
+            chrIndex++;
+        }
+        if (history[i][chrIndex] == '\0')
+            return -3;
+    }
+
+    return len;
 }
 
 int is_history_invocation(char* command)
