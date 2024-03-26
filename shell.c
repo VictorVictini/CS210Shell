@@ -261,7 +261,7 @@ int main()
                 char* aliasArgs[2];
                 if (parse_alias_line(&inputCopy[6], aliasArgs) != 0)
                 {
-                    printf("Error: Could not parse command. Please separate the alias and command with a space. Usage: \"alias\" or \"alias <alias-name> <command>\".\n");
+                    printf("Error: Invalid command format provided. Usage: \"alias\" or \"alias <alias-name> <command>\".\n");
                     continue;
                 }
 

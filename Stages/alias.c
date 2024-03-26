@@ -70,6 +70,8 @@ int parse_alias_line(char* str, char* args[])
     {
         firstArg++;
     }
+    if (firstArg[0] == '\0')
+        return -1;
 
     // finding the first instance of a token
     char* firstToken = NULL;
