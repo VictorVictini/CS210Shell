@@ -65,17 +65,19 @@ void print_alias(AliasPair* aliasPairs, int len)
 int parse_alias_line(char* str, char* args[])
 {
     // ensuring first argument is not a token
-    for (int i = 0; TOKENS[i] != '\0'; i++)
+    char* firstArg = str;
+    while (firstArg[0] != '\0' && strchr(TOKENS, firstArg[0]) != NULL)
     {
-        if (TOKENS[i] == str[0])
-            return -1;
+        firstArg++;
     }
+    if (firstArg[0] == '\0')
+        return -1;
 
     // finding the first instance of a token
     char* firstToken = NULL;
     for (int i = 0; TOKENS[i] != '\0' && firstToken == NULL; i++)
     {
-        firstToken = strchr(str, TOKENS[i]);
+        firstToken = strchr(firstArg, TOKENS[i]);
     }
     if (firstToken == NULL)
         return -1;
@@ -90,7 +92,7 @@ int parse_alias_line(char* str, char* args[])
         return -1;
 
     // assign memory locations to args
-    args[0] = str;
+    args[0] = firstArg;
     firstToken[0] = '\0';
     args[1] = secArg;
 
