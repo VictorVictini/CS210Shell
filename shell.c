@@ -29,7 +29,7 @@ int main()
     if (historyLen == -2)
         printf("Error: Too many lines appeared in the file \"%s\" at \"%s\". Could not add to history. The limit is %d.\n", HIST_FILE_NAME, homeDir, HISTORY_SIZE);
     if (historyLen == -3)
-        printf("Error: Failed to parse a line in the file \"%s\" at \"%s\".\n", HIST_FILE_NAME, homeDir);
+        printf("Error: Failed to parse a line in the file \"%s\" at \"%s\". Expected at least 1 non-token character in every line, and for no lines to be history invocations.\n", HIST_FILE_NAME, homeDir);
     if (historyLen < 0)
     {
         printf("Creating new history list.\n");
@@ -42,7 +42,7 @@ int main()
     if (aliasLen == -1)
         printf("Error: Failed to open the file \"%s\" at \"%s\" when trying to load alias.\n", ALIASES_FILE_NAME, homeDir);
     if (aliasLen == -2)
-        printf("Error: Failed to parse a line in the file \"%s\" at \"%s\".\n", ALIASES_FILE_NAME, homeDir);
+        printf("Error: Failed to parse a line in the file \"%s\" at \"%s\". Expected each line to be in the format \"<alias-name> <command>\".\n", ALIASES_FILE_NAME, homeDir);
     if (aliasLen == -3)
         printf("Error: Failed to add to the list of aliases. There are too many aliases in the file. The limit is %d.\n", MAX_ALIASES);
     if (aliasLen < 0)
