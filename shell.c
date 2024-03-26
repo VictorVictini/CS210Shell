@@ -227,7 +227,7 @@ int main()
             }
             else
             {
-                printf("Error: Too many arguments provided for \"cd\". Usage: \"cd <path>\".\n");
+                printf("Error: Too many arguments provided for \"cd\". Usage: \"cd\" or \"cd <path>\".\n");
             }
         }
         else if (strcmp("history", args[0]) == 0)
