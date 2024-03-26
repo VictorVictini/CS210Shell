@@ -284,6 +284,12 @@ int main()
             }
             else
             {
+                if (aliasLen == 0)
+                {
+                    printf("Error: No aliases currently exist in the list. Please add an alias via the \"alias\" command.\n");
+                    continue;
+                }
+
                 int tempLen = remove_alias(&recentInput[8], aliasPairs, aliasLen);
                 if (tempLen == -1)
                 {
